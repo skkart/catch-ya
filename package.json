@@ -1,0 +1,27 @@
+{
+  "name": "catch-ya",
+  "version": "1.0.1",
+  "description": "A simple chat app using nodejs and socket.io",
+  "main": "index.js",
+   "scripts": {
+    "dev": "nodemon src/index.js -e js,html",
+    "start": "node src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skkart/catch-ya.git"
+  },
+  "author": "skkart",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/skkart/catch-ya/issues"
+  },
+  "homepage": "https://github.com/skkart/catch-ya#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}
