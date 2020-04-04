@@ -1,78 +1,139 @@
-const path = require('path')
-const http = require('http')
 const express = require('express')
+const path = require('path')
+
+const http = require('http')
 const socketio = require('socket.io')
-const Filter = require('bad-words')
-const { generateMessage, generateLocationMessage } = require('./utils/messages')
-const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/users')
+const fs = require('fs')
+
+require('./db/mongoose')
+const userRouter = require('./routers/user')
 
 const app = express()
-const server = http.createServer(app)
-const io = socketio(server)
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 5000
 const publicDirectoryPath = path.join(__dirname, '../public')
 
 app.use(express.static(publicDirectoryPath))
+// app.use('/resources', express.static(__dirname, '../public/img'))
+
+app.use(express.json())
+app.use(userRouter)
+
+const server = http.createServer(app)
+const io = socketio(server)
+const { generateMessage, generateLocationMessage } = require('./utils/messages')
+const {
+  addUser, removeUser, getUser, getUsersInRoom,
+} = require('./utils/users')
+
+const chatDirectoryPath = path.join(__dirname, '../chatlogs')
 
 io.on('connection', (socket) => {
-    console.log('New WebSocket connection')
+  console.log('New WebSocket connection')
 
-    socket.on('join', (options, callback) => {
-        const { error, user } = addUser({ id: socket.id, ...options })
+  const chatLogger = {}
+  socket.on('join', (options, callback) => {
+    console.log('Join')
+    const { error, user } = addUser({ id: socket.id, ...options })
 
-        if (error) {
-            return callback(error)
-        }
+    if (error || !user) {
+      console.log('Error', (error || 'user not found'))
+      return callback(error || 'user not found')
+    }
 
-        // Tell the current socket to join specific room
-        socket.join(user.room)
-
-        // This emit will send only to its connection
-        socket.emit('message', generateMessage('Admin', 'Welcome!'))
-        // This broadcast.to will send all scokets belong to that room apart current connection
-        socket.broadcast.to(user.room).emit('message', generateMessage('Admin', `${user.username} has joined!`))
-        // This io.to will send all scokets belong to that room + current connection
-        io.to(user.room).emit('roomData', {
-            room: user.room,
-            users: getUsersInRoom(user.room)
-        })
-
-        // This callback will inform UI that all is well
-        callback()
+    // Tell the current socket to join specific room
+    socket.join(user.room)
+    const chatPath = path.join(chatDirectoryPath, user.room)
+    chatLogger[user.room] = fs.createWriteStream(chatPath, {
+      flags: 'a+' // 'a' means appending (old data will be preserved)
     })
 
-    socket.on('sendMessage', (message, callback) => {
-        const user = getUser(socket.id)
-        const filter = new Filter()
+    // This emit will send only to its connection
+    // socket.emit('message', generateMessage('Admin', 'Welcome!'))
+    // This broadcast.to will send all scokets belong to that room apart current connection
+    // socket.broadcast.to(user.room).emit('message', generateMessage('Admin', `${user.username} has joined!`))
+    // This io.to will send all scokets belong to that room + current connection
 
-        if (filter.isProfane(message)) {
-            return callback('Profanity is not allowed!')
-        }
+    fs.readFile(chatPath, 'utf8', (err, dt) => {
+      if (err) {
+        console.log('File Read err', err)
+        dt = ''
+      }
+      io.to(user.room).emit('roomData', {
+        room: user.room,
+        users: getUsersInRoom(user.room),
+        chatLogs: dt
+      })
 
-        io.to(user.room).emit('message', generateMessage(user.username, message))
-        callback()
+      // This callback will inform UI that all is well
+      callback()
     })
+  })
 
-    socket.on('sendLocation', (coords, callback) => {
-        const user = getUser(socket.id)
-        io.to(user.room).emit('locationMessage', generateLocationMessage(user.username, `https://google.com/maps?q=${coords.latitude},${coords.longitude}`))
-        callback()
-    })
+  socket.on('sendMessage', (message, callback) => {
+    const user = getUser(socket.id)
+    if (!user) {
+      console.log('User Not found')
+      return
+    }
+    io.to(user.room).emit('message', generateMessage(user.username, message, chatLogger[user.room]))
+    callback()
+  })
 
-    socket.on('disconnect', () => {
-        const user = removeUser(socket.id)
+  socket.on('sendLocation', (coords, callback) => {
+    const user = getUser(socket.id)
+    if (!user) {
+      console.log('User Not found')
+      return
+    }
+    io.to(user.room).emit('locationMessage', generateLocationMessage(user.username, `https://google.com/maps?q=${coords.latitude},${coords.longitude}`))
+    callback()
+  })
 
-        if (user) {
-            io.to(user.room).emit('message', generateMessage('Admin', `${user.username} has left!`))
-            io.to(user.room).emit('roomData', {
-                room: user.room,
-                users: getUsersInRoom(user.room)
-            })
-        }
-    })
+  socket.on('disJoin', (options, callback) => {
+    console.log('disJoin')
+    const user = removeUser(socket.id)
+    if (!user) {
+      console.log('User Not found')
+      return callback('User not found')
+    }
+
+
+    // Close the chatLogger only if all the users are disJoined
+    const allUserInSameRoom = getUsersInRoom(user.room)
+    if (allUserInSameRoom.length === 0) {
+      console.log('Close chatLogger')
+      chatLogger[user.room].end()
+      chatLogger[user.room].close()
+      chatLogger[user.room] = null
+    }
+  })
+
+  socket.on('disconnect', () => {
+    console.log('disconnect')
+    const user = removeUser(socket.id)
+
+    if (!user) {
+      console.log('User Not found')
+      return
+    }
+
+    // io.to(user.room).emit('message', generateMessage('Admin', `${user.username} has left!`, chatLogger[user.room]))
+    // io.to(user.room).emit('roomData', {
+    //   room: user.room,
+    //   users: getUsersInRoom(user.room),
+    // })
+    // Close the chatLogger only if all the users are disJoined
+    const allUserInSameRoom = getUsersInRoom(user.room)
+    if (allUserInSameRoom.length === 0) {
+      console.log('Close chatLogger')
+      chatLogger[user.room].end()
+      chatLogger[user.room].close()
+      chatLogger[user.room] = null
+    }
+  })
 })
 
 server.listen(port, () => {
-    console.log(`Server is up on port ${port}!`)
+  console.log(`Server is up on port ${port}!`)
 })

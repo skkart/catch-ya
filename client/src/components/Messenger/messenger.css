@@ -1,0 +1,37 @@
+.messenger {
+    display: grid;
+    width: 100%;
+    height: calc(100vh);
+    background: var(--bg-messenger-color);
+    grid-template-columns: 350px auto;
+    grid-template-rows: 60px auto 60px;
+    grid-column-gap: 1px;
+    grid-row-gap: 1px;
+}
+
+.container {
+    padding: 10px;
+}
+
+.scrollable {
+    position: relative;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
+.sidebar {
+    background: var(--bg-white-color);
+    grid-row-start: 1;
+    grid-row-end: span 3;
+}
+
+.content {
+    background: var(--bg-white-color);
+    grid-row-start: 1;
+    grid-row-end: span 3;
+}
+
+.footer {
+    grid-column-start: 2;
+    background: var(--bg-white-color);
+}
