@@ -1,4 +1,4 @@
-const generateMessage = (username, text, chatLogger) => {
+const generateMessage = (username, text, room, chatLogger) => {
   const dt = {
     username,
     text,
@@ -7,6 +7,7 @@ const generateMessage = (username, text, chatLogger) => {
   if (chatLogger) {
     chatLogger.write(`${JSON.stringify(dt)},`)
   }
+  dt.room = room
   return dt
 }
 

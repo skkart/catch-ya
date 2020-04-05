@@ -6,7 +6,6 @@ const socketio = require('socket.io')
 const fs = require('fs')
 
 require('./db/mongoose')
-const userRouter = require('./routers/user')
 
 const app = express()
 
@@ -17,7 +16,10 @@ app.use(express.static(publicDirectoryPath))
 // app.use('/resources', express.static(__dirname, '../public/img'))
 
 app.use(express.json())
-app.use(userRouter)
+require('./routers/auth')(app)
+require('./routers/user')(app)
+require('./routers/chatGroups')(app)
+
 
 const server = http.createServer(app)
 const io = socketio(server)
@@ -76,7 +78,7 @@ io.on('connection', (socket) => {
       console.log('User Not found')
       return
     }
-    io.to(user.room).emit('message', generateMessage(user.username, message, chatLogger[user.room]))
+    io.to(user.room).emit('message', generateMessage(user.username, message, user.room, chatLogger[user.room]))
     callback()
   })
 

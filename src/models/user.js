@@ -1,5 +1,8 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
+const path = require('path')
+const sharp = require('sharp')
+const { Schema } = mongoose
 const jwt = require('jsonwebtoken')
 const keys = require('../../config/keys')
 
@@ -34,13 +37,33 @@ const userSchema = new mongoose.Schema({
       }
     }
   },
+  gender: {
+    type: String,
+    required: true,
+    trim: true,
+    validate(value) {
+      const val = value.toLowerCase()
+      if (['male', 'female'].indexOf(val) === -1) {
+        throw new Error('Invalid Gender')
+      }
+    }
+  },
   about: {
     type: String,
     required: false,
     trim: true,
     default: 'Catch Me anytime !!!'
   },
-  groups: [String],
+  chatlinks: [{
+    refId: {
+      type: Schema.Types.ObjectId,
+      required: true
+    },
+    refType: {
+      type: String,
+      required: true
+    }
+  }],
   tokens: [{
     token: {
       type: String,
@@ -52,7 +75,7 @@ const userSchema = new mongoose.Schema({
   }
 }, {
   timestamps: true
-})
+} )
 
 userSchema.methods.toJSON = function () {
   const user = this
@@ -75,6 +98,15 @@ userSchema.methods.generateAuthToken = async function () {
   return token
 }
 
+userSchema.methods.generateAvatar = async function () {
+  const user = this
+  let imgBuffer = null
+  if (!user.avatar) {
+    const imageLoc = path.join(__dirname, '../../public/img')
+    imgBuffer = await sharp(path.join(imageLoc, user.gender)).resize({ width: 250, height: 250 }).png().toBuffer()
+  }
+  return imgBuffer
+}
 
 // Hash the plain text password before saving
 userSchema.pre('save', async function (next) {
