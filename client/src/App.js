@@ -17,7 +17,7 @@ import 'bootstrap/dist/js/bootstrap'
 import Login from './components/Login'
 import SignUp from './components/SignUp'
 import PrivateRoute from './private-route/PrivateRoute'
-import Dashboard from './components/Dashboard'
+import Chatboard from './components/ChatBoard'
 import ImageUploader from './components/ImageUploader'
 import AddChats from './components/AddChats'
 
@@ -65,21 +65,13 @@ class App extends Component {
     return (
       <Router>
         <div className="App">
-          <nav className="navbar navbar-expand-lg navbar-light fixed-top">
-            <div className="container">
-              <Link className="navbar-brand" to={isAuth ? '/dashboard' : '/sign-in'}>Catch-Ya!!!</Link>
-              <div className="collapse navbar-collapse">
-                {headerBar}
-              </div>
-            </div>
-          </nav>
           <div className="auth-wrapper">
             <Switch>
               <Route exact path="/" component={Login} />
               <Route path="/sign-in" component={Login} />
               <Route path="/sign-up" component={SignUp} />
               <Switch>
-                <PrivateRoute exact path="/dashboard" component={Dashboard} />
+                <PrivateRoute exact path="/dashboard" component={Chatboard} />
                 <Route path="/uploadAvatar" component={ImageUploader} />
                 <Route path="/addChats" component={AddChats} />
               </Switch>

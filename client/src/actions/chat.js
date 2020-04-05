@@ -13,10 +13,10 @@ export const loadUserChats = () => async (dispatch, getState) => {
     }) => {
       const isGroup = !email
       return {
-        photo: avatar,
+        avatar,
         name,
-        text: about,
-        id: _id,
+        about,
+        _id,
         isGroup,
         room: isGroup ? _id : getGroupName(_id, auth._id)
       } 

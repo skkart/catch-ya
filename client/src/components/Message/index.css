@@ -39,14 +39,10 @@
   position: absolute;
 }
 
-.message.start .bubble-container .bubble {
-  border-top-left-radius: 20px;
-  margin-bottom: 10px;
-}
-
+.message.start .bubble-container .bubble,
 .message.end .bubble-container .bubble {
   border-bottom-left-radius: 20px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .message.mine.start .bubble-container .bubble {

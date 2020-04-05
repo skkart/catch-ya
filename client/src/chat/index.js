@@ -47,6 +47,12 @@ export const registerRoomData = (cb) => {
   })
 }
 
+
+export const destroySocket = () => {
+  socket.disconnect()
+  socket = null
+}
+
 //
 // socket.on('message', (message) => {
 //   console.log(message)
