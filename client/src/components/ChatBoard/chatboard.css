@@ -732,6 +732,7 @@ div {
 .chat-board .content .messages ul li.timestamp {
     margin-top: 25px;
     position: relative;
+    text-align: center;
 }
 
 .chat-board .content .messages ul li.timestamp.sent span {
