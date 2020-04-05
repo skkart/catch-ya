@@ -4,7 +4,7 @@ import { logoutUser } from '../actions'
 import { initSocket } from '../chat'
 
 import Messenger from './Messenger'
-import ImageUploader from "./ImageUploader";
+import ImageUploader from './ImageUploader'
 
 class Dashboard extends Component {
   constructor (props) {

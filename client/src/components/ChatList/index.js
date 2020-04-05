@@ -1,34 +1,28 @@
 import React, { useState, useEffect, } from 'react'
-import axios from 'axios'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 import Search from '../Search'
 import GroupItem from '../GroupItem'
 import Toolbar from '../Toolbar'
 import ToolbarButton from '../ToolbarButton'
+import { loadUserChats } from '../../actions'
 
 import './index.css'
-import { getGroupName } from '../../utils/auth-helper'
 
 function ChatList(props) {
   const [conversations, setConversations] = useState([])
 
-  const getConversations = () => {
-    axios.get('/users/connections').then(response => {
-      const newConversations = response.data.map(({
-        name, about, avatar, _id
-      }) => ({
-        photo: avatar,
-        name,
-        text: about,
-        room: getGroupName(_id, props.auth._id)
-      }))
-      setConversations([...conversations, ...newConversations])
-    })
-  }
+  useEffect(() => {
+    if (!props.chat.list || !props.chat.list.length) {
+      props.loadUserChats()
+    }
+  }, [])
 
   useEffect(() => {
-    getConversations()
-  }, [])
+    if (props.chat.list && props.chat.list.length) {
+      setConversations([...props.chat.list])
+    }
+  }, [props.chat])
 
   return (
     <div className="conversation-list">
@@ -38,7 +32,7 @@ function ChatList(props) {
           <ToolbarButton key="cog" icon="ion-ios-cog" />
         ]}
         rightItems={[
-          <ToolbarButton key="add" icon="ion-ios-add-circle-outline" />
+          <i key="add" className={`toolbar-button ion-ios-add-circle-outline`} onClick={() => { props.history.push('/addChats') }} />
         ]}
       />
       <Search />
@@ -56,10 +50,10 @@ function ChatList(props) {
 }
 
 const mapStateToProps = state => ({
-  auth: state.auth
+  chat: state.chat
 })
 
 export default connect(
   mapStateToProps,
-  null
-)(ChatList)
+  { loadUserChats }
+)(withRouter(ChatList))

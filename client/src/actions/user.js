@@ -51,7 +51,3 @@ export const logoutUser = () => async (dispatch) => {
     dispatch({ type: LOGOUT_FAILURE })
   }
 }
-
-export default {
-  loginUser,
-}

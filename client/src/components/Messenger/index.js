@@ -12,7 +12,8 @@ export default function Messenger(props) {
       <div onClick={() => {
         setChat({
           name: '',
-          room: ''
+          room: '',
+          isGroup: false
         })
       }}
       >

@@ -16,14 +16,12 @@ class Login extends Component {
   }
 
   componentDidUpdate(props) {
-    console.log('login update', this.props)
     if (this.props.auth && this.props.auth.email) {
       this.props.history.push('/dashboard') // push user to dashboard when they login
     }
   }
 
   componentDidMount(props) {
-    console.log('login mount', this.props)
     if (this.props.auth && this.props.auth.email) {
       this.props.history.push('/dashboard') // push user to dashboard when they login
     }
@@ -67,7 +65,6 @@ class Login extends Component {
       email: this.state.email,
       password: this.state.password,
     }
-    console.log(userData, this.validateLogin())
     this.props.loginUser(userData) // since we handle the redirect within our component, we don't need to pass in this.props.history as a parameter
   }
 

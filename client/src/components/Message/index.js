@@ -8,11 +8,17 @@ export default function Message(props) {
     isMine,
     startsSequence,
     endsSequence,
-    showTimestamp
+    showTimestamp,
+    isGroup
   } = props
 
   const friendlyTimestamp = moment(data.createdAt).format('LLLL')
   const eachChatTimestamp = moment(data.createdAt).format('h:mm a') // 1:55 pm
+
+  let bottomContent = eachChatTimestamp
+  if (!isMine && isGroup) {
+    bottomContent = `${data.username}, ${eachChatTimestamp}`
+  }
   return (
     <div className={[
       'message',
@@ -33,7 +39,7 @@ export default function Message(props) {
           { data.text }
         </div>
         <div className="time">
-          { eachChatTimestamp }
+          { bottomContent }
         </div>
       </div>
     </div>

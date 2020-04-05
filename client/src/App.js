@@ -8,8 +8,10 @@ import {
 import { connect } from 'react-redux'
 import * as actions from './actions'
 
-import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/css/bootstrap.css'
 import './css/app.css'
+
+import 'bootstrap/dist/js/bootstrap'
 
 // import HomePage from './components/HomePage'
 import Login from './components/Login'
@@ -17,6 +19,7 @@ import SignUp from './components/SignUp'
 import PrivateRoute from './private-route/PrivateRoute'
 import Dashboard from './components/Dashboard'
 import ImageUploader from './components/ImageUploader'
+import AddChats from './components/AddChats'
 
 class App extends Component {
   onLogoutClick = e => {
@@ -75,9 +78,10 @@ class App extends Component {
               <Route exact path="/" component={Login} />
               <Route path="/sign-in" component={Login} />
               <Route path="/sign-up" component={SignUp} />
-              <Route path="/uploadAvatar" component={ImageUploader} />
               <Switch>
                 <PrivateRoute exact path="/dashboard" component={Dashboard} />
+                <Route path="/uploadAvatar" component={ImageUploader} />
+                <Route path="/addChats" component={AddChats} />
               </Switch>
             </Switch>
           </div>

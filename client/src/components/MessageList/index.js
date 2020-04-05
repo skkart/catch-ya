@@ -119,6 +119,7 @@ class MessageList extends Component {
           endsSequence={endsSequence}
           showTimestamp={showTimestamp}
           data={current}
+          isGroup={this.props.chat.isGroup}
         />
       )
 

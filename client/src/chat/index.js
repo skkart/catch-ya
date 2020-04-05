@@ -36,6 +36,7 @@ export const sendMessage = (message, cb) => {
 
 export const registerMessage = (cb) => {
   socket.on('message', (message) => {
+    console.log('Rec Msg', message)
     cb(message)
   })
 }

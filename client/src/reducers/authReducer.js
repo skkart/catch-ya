@@ -2,7 +2,7 @@ import {
   LOGIN_SUCCESS, LOGOUT, LOGOUT_FAILURE, SUCCESS, ERROR
 } from '../actions/types'
 
-export default function (state, action) {
+export default function (state = {}, action) {
   console.log('action', action)
   switch (action.type) {
   case LOGIN_SUCCESS:
@@ -13,6 +13,6 @@ export default function (state, action) {
   case ERROR:
     return {}
   default:
-    return null
+    return state
   }
 }

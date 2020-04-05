@@ -31,6 +31,14 @@
   position: absolute;
 }
 
+.message .bubble-container .name{
+  font-size: 11px;
+  float: right;
+  height: 13px;
+  top: -13px;
+  position: absolute;
+}
+
 .message.start .bubble-container .bubble {
   border-top-left-radius: 20px;
   margin-bottom: 10px;
