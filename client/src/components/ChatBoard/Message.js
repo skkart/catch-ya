@@ -15,14 +15,18 @@ export default function Message({
   return (
     <li className={isMine ? `sent ${liClass}` : `replies ${liClass}`}>
       {
-        data.username && <span>{timestampContent}</span>
+        (data.username && showTimestamp) && <span>{timestampContent}</span>
       }
       {
         data.username ?
           <p>{data.text}</p>
-          :
-          `------------- ${moment(data.createdAt).format('LLLL')} -------------`
-      }
+          : (<small>
+          &#x02015;&#x02015;&#x02015;
+            {` ${moment(data.createdAt).format('DD MMM YYYY')} `}
+              &#x02015;&#8213;&#x02015;
+          </small>
+
+          )}
     </li>
   )
 }

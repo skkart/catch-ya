@@ -670,12 +670,16 @@ div {
     color: #435f7a;
 }
 
-.chat-board .content .messages {
+.chat-board .content .messageblock {
     height: auto;
     min-height: calc(100% - 93px);
     max-height: calc(100% - 93px);
     overflow-y: scroll;
     overflow-x: hidden;
+}
+
+.chat-board .content .messageblock #scrollMsgBlock {
+    visibility: hidden;
 }
 
 @media screen and (max-width: 735px) {
@@ -697,7 +701,7 @@ div {
     display: inline-block;
     clear: both;
     float: left;
-    margin: 5px 15px 5px 15px;
+    margin: 1px 15px 3px 15px;
     width: calc(100% - 25px);
     font-size: 0.9em;
 }
@@ -737,16 +741,18 @@ div {
 
 .chat-board .content .messages ul li.timestamp.sent span {
     position: absolute;
-    top: -16px;
+    top: -13px;
     float: right;
     right: 5px;
+    font-size: 11px;
 }
 
 .chat-board .content .messages ul li.timestamp.replies span {
     position: absolute;
-    top: -16px;
+    top: -13px;
     float: left;
     left: 5px;
+    font-size: 11px;
 }
 
 .chat-board .content .messages ul li img {
