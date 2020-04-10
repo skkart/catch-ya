@@ -23,6 +23,27 @@ body {
     background: var(--main-bg-chat-color);
 }
 
+
+.modal-header {
+    background: var(--main-chat-sidebar-color);
+}
+
+.modal-header button.close,
+.modal-header button.close:hover {
+    color: white;
+}
+
+.list-group .list-group-item {
+    cursor: pointer;
+}
+
+.list-suggestion {
+    color: gray;
+    font-weight: bold;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
 @media screen and (max-width: 360px) {
     .chat-board {
         width: 100%;
@@ -385,14 +406,14 @@ body {
 
 .chat-board .sidepanel .contacts {
     height: calc(100% - 177px);
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: hidden;
 }
 
 @media screen and (max-width: 735px) {
     .chat-board .sidepanel .contacts {
         height: calc(100% - 149px);
-        overflow-y: scroll;
+        overflow-y: auto;
         overflow-x: hidden;
     }
 
@@ -415,7 +436,7 @@ body {
 }
 
 
-.chat-board .sidepanel .contacts ul {
+.contacts ul {
     margin: 0;
     padding: 0;
     border: 0;
@@ -424,7 +445,7 @@ body {
     vertical-align: baseline;
 }
 
-.chat-board .sidepanel .contacts ul li.contact {
+.contacts ul li.contact {
     position: relative;
     padding: 10px 0 15px 0;
     font-size: 0.9em;
@@ -454,7 +475,7 @@ body {
     border: 2px solid var(--main-chat-color) !important;
 }
 
-.chat-board .sidepanel .contacts ul li.contact .wrap {
+.contacts ul li.contact .wrap {
     width: 88%;
     margin: 0 auto;
     position: relative;
@@ -466,7 +487,7 @@ body {
     }
 }
 
-.chat-board .sidepanel .contacts ul li.contact .wrap span {
+.contacts ul li.contact .wrap span {
     position: absolute;
     left: 0;
     margin: -2px 0 0 -2px;
@@ -477,19 +498,19 @@ body {
     background: #95a5a6;
 }
 
-.chat-board .sidepanel .contacts ul li.contact .wrap span.online {
+.contacts ul li.contact .wrap span.online {
     background: #2ecc71;
 }
 
-.chat-board .sidepanel .contacts ul li.contact .wrap span.away {
+.contacts ul li.contact .wrap span.away {
     background: #f1c40f;
 }
 
-.chat-board .sidepanel .contacts ul li.contact .wrap span.busy {
+.contacts ul li.contact .wrap span.busy {
     background: #e74c3c;
 }
 
-.chat-board .sidepanel .contacts ul li.contact .wrap img {
+.contacts ul li.contact .wrap img {
     width: 40px;
     border-radius: 50%;
     float: left;
@@ -510,7 +531,7 @@ div {
     vertical-align: baseline;
 }
 
-.chat-board .sidepanel .contacts ul li.contact .wrap .meta {
+.contacts ul li.contact .wrap .meta {
     padding: 5px 0 0 0;
     margin: 0;
     border: 0;
@@ -525,11 +546,11 @@ div {
     }
 }
 
-.chat-board .sidepanel .contacts ul li.contact .wrap .meta .name {
+.contacts ul li.contact .wrap .meta .name {
     font-weight: 600;
 }
 
-.chat-board .sidepanel .contacts ul li.contact .wrap .meta .preview {
+.contacts ul li.contact .wrap .meta .preview {
     margin: 5px 0 0 0;
     padding: 0 0 1px;
     font-weight: 400;
@@ -542,7 +563,7 @@ div {
     transition: 1s all ease;
 }
 
-.chat-board .sidepanel .contacts ul li.contact .wrap .meta .preview span {
+.contacts ul li.contact .wrap .meta .preview span {
     position: initial;
     border-radius: initial;
     background: none;
@@ -835,7 +856,7 @@ div {
     padding: 12px 0;
     cursor: pointer;
     background: var(--main-chat-color);
-    color: var(--main-profile-color);;
+    color: var(--main-profile-color);
 }
 
 @media screen and (max-width: 735px) {
@@ -850,4 +871,17 @@ div {
 
 .chat-board .content .message-input .wrap button:focus {
     outline: none;
+}
+
+
+.form-group label {
+    color: var(--main-chat-color);
+}
+
+.chat-board .sidepanel .profile .wrap .logout-button {
+    float: right;
+    margin-top: 23px;
+    font-size: 15px;
+    color: var(--other-msg-color);
+    cursor: pointer;
 }

@@ -103,7 +103,7 @@ userSchema.methods.generateAvatar = async function () {
   let imgBuffer = null
   if (!user.avatar) {
     const imageLoc = path.join(__dirname, '../../public/img')
-    imgBuffer = await sharp(path.join(imageLoc, user.gender)).resize({ width: 250, height: 250 }).png().toBuffer()
+    imgBuffer = await sharp(path.join(imageLoc, `${user.gender}.png`)).resize({ width: 250, height: 250 }).png().toBuffer()
   }
   return imgBuffer
 }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { each } from 'lodash'
+import { Link } from 'react-router-dom'
 import * as actions from '../actions'
 
 const emailRegex = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
@@ -111,6 +112,13 @@ class Login extends Component {
           </div>
 
           <button type="submit" className="btn btn-primary btn-block login-submit">Submit</button>
+
+          <div className="form-group">
+            <p className="forgot-password text-right">
+              New User
+              <Link to="/sign-up"> sign up?</Link>
+            </p>
+          </div>
         </form>
       </div>
     )

@@ -5,6 +5,7 @@ import { loadUserChats } from '../../actions'
 
 function Contacts(props) {
   const [contactList, setContactList] = useState([])
+  const [currentContact, setCurrentContact] = useState({})
 
   // Load chats on mount
   useEffect(() => {
@@ -26,7 +27,11 @@ function Contacts(props) {
       <ul>
         {
           contactList.map(contact => (
-            <li className="contact" key={contact._id} onClick={() => { props.onChatSelect(contact) }}>
+            <li
+              className={contact._id === currentContact._id ? 'contact active' : 'contact'}
+              key={contact._id}
+              onClick={() => { setCurrentContact(contact); props.onChatSelect(contact) }}
+            >
               <div className="wrap">
                 <span className="contact-status online" />
                 <img src={`data:image/png;base64,${contact.avatar}`} alt="" />

@@ -45,7 +45,7 @@ module.exports = (router) => {
 
       // Check if current group has current user
       const groupLinks = chatGrp.members || []
-      const foundUserInGroup = groupLinks.find((grp) => grp.refId === req.user._id)
+      const foundUserInGroup = groupLinks.find((grp) => grp.refId.toString() === req.user._id.toString())
 
       if (foundUserInGroup) {
         throw new Error('User for this Chat Group already exists')
@@ -97,20 +97,26 @@ module.exports = (router) => {
 
       // Check if current group has current user
       const groupLinks = chatGrp.members || []
-      const foundUserInGroup = groupLinks.find((grp) => grp.refId === req.user._id)
 
+      const foundUserInGroup = groupLinks.find((grp) => {
+        console.log('Each ', grp.refId, req.user._id, grp.refId.toString() === req.user._id.toString())
+        return (grp.refId.toString() === req.user._id.toString())
+      })
+      console.log(foundUserInGroup)
       if (foundUserInGroup) {
         const buffer = await sharp(req.file.buffer).resize({ width: 250, height: 250 }).png().toBuffer()
-        req.user.avatar = buffer
-        await req.user.save()
+        chatGrp.avatar = buffer
+        await chatGrp.save()
       } else {
         throw new Error('Invalid user access to Chat Group')
       }
       res.status(200).send()
     } catch (e) {
+      console.log(e)
       res.status(400).send(e)
     }
   }, (error, req, res, next) => {
+    console.log(error.message)
     res.status(400).send({ error: error.message })
   })
 }

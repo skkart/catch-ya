@@ -6,6 +6,7 @@ const auth = require('../middleware/auth')
 
 module.exports = (router) => {
   router.post('/users', async (req, res) => {
+    console.log('Post user', req.body)
     const user = new User(req.body)
 
     try {
@@ -13,11 +14,14 @@ module.exports = (router) => {
       if (avatarBuffer) {
         user.avatar = avatarBuffer
       }
+      console.log('saving user')
       await user.save()
       // sendWelcomeEmail(user.email, user.name)
       const token = await user.generateAuthToken()
+      console.log('generateAuthToken user')
       res.status(201).send({ user, token })
     } catch (e) {
+      console.log('Error on user save', e)
       res.status(400).send(e)
     }
   })
@@ -149,7 +153,7 @@ module.exports = (router) => {
 
   router.patch('/users/me', auth, async (req, res) => {
     const updates = Object.keys(req.body)
-    const allowedUpdates = ['name', 'email', 'password', 'age']
+    const allowedUpdates = ['name', 'email', 'gender', 'about']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
 
     if (!isValidOperation) {
@@ -193,6 +197,19 @@ module.exports = (router) => {
     const buffer = await sharp(req.file.buffer).resize({ width: 250, height: 250 }).png().toBuffer()
     req.user.avatar = buffer
     await req.user.save()
+    res.send(buffer)
+  }, (error, req, res, next) => {
+    res.status(400).send({ error: error.message })
+  })
+
+  router.post('/users/:id/avatar', upload.single('avatar'), async (req, res) => {
+    const userObj = await User.findById(req.params.id)
+    if (!userObj) {
+      throw new Error('Invalid User')
+    }
+    const buffer = await sharp(req.file.buffer).resize({ width: 250, height: 250 }).png().toBuffer()
+    userObj.avatar = buffer
+    await userObj.save()
     res.send()
   }, (error, req, res, next) => {
     res.status(400).send({ error: error.message })

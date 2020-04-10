@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Fira+Sans:400,500,600,700,800');
 
 :root {
-    --main-bg-color: #ff8176 !important;
+    --main-bg-color: #32465a !important;
     --bg-white-color: #ffffff;
     --error-color: #b94a48;
     --bg-messenger-color: #eeeef1;
@@ -102,4 +102,15 @@ body, html, .App, #root, .auth-wrapper {
 span.error {
     color: var(--error-color);
     font-size: 11px;
+}
+
+.sign-up {
+    width: 300px;
+}
+
+@media screen and (max-width: 735px) {
+    .sign-up {
+        width: auto;
+        max-width: 300px;
+    }
 }
