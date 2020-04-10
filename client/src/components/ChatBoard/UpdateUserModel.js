@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react'
+import Loader from 'react-loader-spinner'
 import { connect } from 'react-redux'
 import axios from 'axios'
 import './addGroupForm.css'
@@ -8,6 +9,7 @@ function UpdateUserModel(props) {
   const closeButton = useRef(null)
   const imagePreview = useRef(null)
   const fileUpload = useRef(null)
+  const [submitted, setSubmitted] = useState(false)
   const [userForm, setUserForm] = useState({
     name: props.auth.name,
     about: props.auth.about
@@ -15,6 +17,7 @@ function UpdateUserModel(props) {
   const [avatarFile, setAvatarFile] = useState(null)
 
   const onUserSubmit = async (e) => {
+    setSubmitted(true)
     e.preventDefault()
     console.log('userForm, ', userForm)
     try {
@@ -41,19 +44,15 @@ function UpdateUserModel(props) {
         }
 
         if (patchedUser) {
-          props.initUserAuth()
+          await props.initUserAuth()
         }
-
-        // setAvatarFile(null)
-        // setUserForm({
-        //   name: '',
-        //   about: ''
-        // })
         closeButton.current.click()
       }
     } catch (err) {
       console.log('Error in Update User', err)
       alert('Failed to Update Profile: ', err)
+    } finally {
+      setSubmitted(false)
     }
   }
 
@@ -86,8 +85,10 @@ function UpdateUserModel(props) {
       tabIndex="-1"
       role="dialog"
       aria-hidden="true"
+      data-backdrop="static"
+      data-keyboard="false"
     >
-      <div className="modal-dialog modal-dialog-centered" role="document">
+      <div className={submitted ? 'modal-dialog modal-dialog-centered disabled-state' : 'modal-dialog modal-dialog-centered'} role="document">
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title">Update Profile</h5>
@@ -105,12 +106,7 @@ function UpdateUserModel(props) {
                   id="name"
                   placeholder="Enter Name"
                   value={userForm.name}
-                  onChange={(e) => {
-                    setUserForm({
-                      name: e.target.value,
-                      about: userForm.about
-                    })
-                  }}
+                  disabled={true}
                 />
               </div>
               <div className="form-group">
@@ -147,7 +143,16 @@ function UpdateUserModel(props) {
                 </div>
               </div>
 
-              <button type="submit" className="btn btn-primary">Submit</button>
+              {
+                submitted ? (
+                  <button className="btn btn-primary float-right">
+                    <Loader className="chatLoader" type="ThreeDots" height={30} width={60} />
+                  </button>
+                ) : (
+                  <button type="submit" className="btn btn-primary float-right">
+                    Submit
+                  </button>
+                )}
             </form>
           </div>
         </div>

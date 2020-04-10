@@ -8,6 +8,9 @@ export const initSocket = () => {
 
 
 export const joinGroup = (groupDetails, cb) => {
+  if (!socket) {
+    return
+  }
   socket.emit('join', groupDetails, (error) => {
     if (error) {
       return cb && cb(error)
@@ -17,6 +20,9 @@ export const joinGroup = (groupDetails, cb) => {
 }
 
 export const disJoinGroup = (groupDetails, cb) => {
+  if (!socket) {
+    return
+  }
   socket.emit('disJoin', groupDetails, (error) => {
     if (error) {
       return cb && cb(error)
@@ -26,6 +32,9 @@ export const disJoinGroup = (groupDetails, cb) => {
 }
 
 export const sendMessage = (message, cb) => {
+  if (!socket) {
+    return
+  }
   socket.emit('sendMessage', message, (error) => {
     if (error) {
       return cb(error)
@@ -35,6 +44,9 @@ export const sendMessage = (message, cb) => {
 }
 
 export const registerMessage = (cb) => {
+  if (!socket) {
+    return
+  }
   socket.on('message', (message) => {
     console.log('Rec Msg', message)
     cb(message)
@@ -42,6 +54,9 @@ export const registerMessage = (cb) => {
 }
 
 export const registerRoomData = (cb) => {
+  if (!socket) {
+    return
+  }
   socket.on('roomData', (roomData) => {
     cb(roomData)
   })
@@ -49,6 +64,9 @@ export const registerRoomData = (cb) => {
 
 
 export const destroySocket = () => {
+  if (!socket) {
+    return
+  }
   socket.disconnect()
   socket = null
 }

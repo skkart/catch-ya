@@ -8,6 +8,7 @@ import {
 import { connect } from 'react-redux'
 import * as actions from './actions'
 
+import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css'
 import 'bootstrap/dist/css/bootstrap.css'
 import './css/app.css'
 

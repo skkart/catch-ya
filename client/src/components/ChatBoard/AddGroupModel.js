@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react'
+import Loader from 'react-loader-spinner'
 import { connect } from 'react-redux'
 import axios from 'axios'
 import './addGroupForm.css'
@@ -8,6 +9,7 @@ function AddGroupModel(props) {
   const closeButton = useRef(null)
   const imagePreview = useRef(null)
   const fileUpload = useRef(null)
+  const [submitted, setSubmitted] = useState(false)
   const [chatGroupForm, setChatGroupForm] = useState({
     name: '',
     about: ''
@@ -16,6 +18,7 @@ function AddGroupModel(props) {
   const [avatarFile, setAvatarFile] = useState(null)
 
   const onChatGroupSubmit = async (e) => {
+    setSubmitted(true)
     e.preventDefault()
     console.log('chatGroupForm, ', chatGroupForm)
     try {
@@ -35,19 +38,22 @@ function AddGroupModel(props) {
           }
           await axios.post(`/chatGroups/${added.data._id}/avatar`, formData, config)
         }
-
-        await props.loadUserChats()
         setFlushAvatar(true)
         setAvatarFile(null)
         setChatGroupForm({
           name: '',
           about: ''
         })
+
+        await props.loadUserChats()
         closeButton.current.click()
       }
     } catch (err) {
       console.log('Error in Create group', err)
       alert('Failed to create group: ', err)
+    } finally {
+      setSubmitted(false)
+      setFlushAvatar(false)
     }
   }
 
@@ -81,7 +87,10 @@ function AddGroupModel(props) {
       role="dialog"
       aria-hidden="true"
     >
-      <div className="modal-dialog modal-dialog-centered" role="document">
+      <div
+        className={submitted ? 'modal-dialog modal-dialog-centered disabled-state' : 'modal-dialog modal-dialog-centered'}
+        role="document"
+      >
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title">Add New Group</h5>
@@ -125,24 +134,32 @@ function AddGroupModel(props) {
               </div>
 
 
-              flushAvatar && (
-              <div className="form-group">
-                <label>Upload Profile Picture</label>
-                <div className="image-wrapper">
-                  <div className="box">
-                    <div ref={imagePreview} className="js--image-preview" />
-                    <div className="upload-options">
-                      <label>
-                        <input ref={fileUpload} type="file" onChange={readURL} className="image-upload" accept="image/*" />
-                      </label>
+              {!flushAvatar && (
+                <div className="form-group">
+                  <label>Upload Profile Picture</label>
+                  <div className="image-wrapper">
+                    <div className="box">
+                      <div ref={imagePreview} className="js--image-preview" />
+                      <div className="upload-options">
+                        <label>
+                          <input ref={fileUpload} type="file" onChange={readURL} className="image-upload" accept="image/*" />
+                        </label>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-)
+              )}
 
-
-              <button type="submit" className="btn btn-primary">Submit</button>
+              {
+                submitted ? (
+                  <button className="btn btn-primary float-right">
+                    <Loader className="chatLoader" type="ThreeDots" height={30} width={60} />
+                  </button>
+                ) : (
+                  <button type="submit" className="btn btn-primary float-right">
+                    Submit
+                  </button>
+                )}
             </form>
           </div>
         </div>

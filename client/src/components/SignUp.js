@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronCircleRight } from '@fortawesome/free-solid-svg-icons'
 import axios from 'axios'
 import { loginUser } from '../actions'
+import { removeAuthToken } from '../utils/auth-helper'
 
 const emailRegex = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 
@@ -113,6 +114,7 @@ function SignUp(props) {
   const onSignOnSubmit = async (e) => {
     try {
       e.preventDefault()
+      removeAuthToken()
 
       // Submit the user first and avatar if exists
       const added = await axios.post('/users', signForm)
@@ -130,7 +132,7 @@ function SignUp(props) {
         await axios.post(`/users/${added.data.user._id}/avatar`, formData, config)
       }
 
-      props.loginUser({
+      await props.loginUser({
         email: signForm.email,
         password: signForm.password,
       }) // since we handle the redirect within our component, we don't need to pass in this.props.history as a parameter
@@ -142,7 +144,7 @@ function SignUp(props) {
 
   useEffect(() => {
     if (props.auth && props.auth.email) {
-      props.history.push('/dashboard') // push user to dashboard when they login
+      props.history.push('/dashboard') // push user to dashboard if they are loggedin
     }
   }, [props.auth])
 

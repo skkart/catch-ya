@@ -11,7 +11,8 @@ function Profile(props) {
   const onLogoutClick = async e => {
     e.preventDefault()
     await props.logoutUser()
-    props.history.push('/sign-in')
+    window.href = '/sign-in'
+    // props.history.push('/sign-in')
   }
 
 

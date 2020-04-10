@@ -14,7 +14,7 @@ function MessageBlock(props) {
   const [msg, setMsg] = useState('')
 
 
-  const username = props.auth.name
+  const username = props.auth.name.toLowerCase()
   const { room } = props.info
 
   const scrollToBottom = () => setTimeout(() => {

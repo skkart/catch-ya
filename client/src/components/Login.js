@@ -2,21 +2,27 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { each } from 'lodash'
 import { Link } from 'react-router-dom'
+import Loader from 'react-loader-spinner'
 import * as actions from '../actions'
 
 const emailRegex = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 
 class Login extends Component {
-  state = {
-    email: '',
-    password: '',
-    errors: {
+  constructor(props) {
+    super(props)
+    this.state = {
+      submitted: false,
       email: '',
       password: '',
-    },
+      errors: {
+        email: '',
+        password: '',
+      },
+    }
   }
 
   componentDidUpdate(props) {
+    console.log('update', this.props.auth)
     if (this.props.auth && this.props.auth.email) {
       this.props.history.push('/dashboard') // push user to dashboard when they login
     }
@@ -60,20 +66,33 @@ class Login extends Component {
     this.setState({ [name]: value })
   }
 
-  onSubmit = (e) => {
-    e.preventDefault()
-    const userData = {
-      email: this.state.email,
-      password: this.state.password,
+  onSubmit = async (e) => {
+    try {
+      this.setState({
+        submitted: true
+      })
+      e.preventDefault()
+      const userData = {
+        email: this.state.email,
+        password: this.state.password,
+      }
+      await this.props.loginUser(userData) // since we handle the redirect within our component, we don't need to pass in this.props.history as a parameter
+    } catch (err) {
+      console.log('Failed to login', err)
+    } finally {
+      console.log('false it')
+      this.setState({
+        submitted: false
+      })
     }
-    this.props.loginUser(userData) // since we handle the redirect within our component, we don't need to pass in this.props.history as a parameter
   }
 
   render() {
     const { errors } = this.state
+    console.log('this.props.auth', this.props.auth, this.state)
     return (
       <div className="auth-inner">
-        <form noValidate onSubmit={this.onSubmit}>
+        <form className={this.state.submitted ? 'disabled-state' : ''} noValidate onSubmit={this.onSubmit}>
           <h3>Sign In</h3>
 
           <div className="form-group">
@@ -111,7 +130,18 @@ class Login extends Component {
             </div>
           </div>
 
-          <button type="submit" className="btn btn-primary btn-block login-submit">Submit</button>
+          {
+            [(
+              <button
+                type="submit"
+                className={this.props.auth.isLoginFailed ? 'btn btn-danger btn-block login-submit' : 'btn btn-primary btn-block login-submit'}
+              >
+                Submit
+              </button>),
+              (this.props.auth.isLoginFailed > 0 &&
+                <span className="error">Please provide a valid username and password.</span>)
+            ]
+          }
 
           <div className="form-group">
             <p className="forgot-password text-right">

@@ -39,7 +39,12 @@ export const loginUser = ({ email, password }) => async (dispatch) => {
     payload.isAuth = true
     dispatch({ type: LOGIN_SUCCESS, payload })
   } catch (e) {
-    dispatch({ type: LOGIN_FAILURE, payload: {} })
+    dispatch({
+      type: LOGIN_FAILURE,
+      payload: {
+        isLoginFailed: true
+      } 
+    })
   }
 }
 

@@ -114,3 +114,22 @@ span.error {
         max-width: 300px;
     }
 }
+
+.chatLoader {
+    color: var(--main-bg-chat-color);
+}
+
+.chatLoader svg {
+    display: block;
+    margin: auto;
+    fill: var(--main-bg-chat-color);
+}
+
+.disabled-state {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.login-submit {
+    color: #000;
+}

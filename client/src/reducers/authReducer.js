@@ -1,16 +1,20 @@
 import {
-  LOGIN_SUCCESS, LOGOUT, LOGOUT_FAILURE, SUCCESS, ERROR
+  LOGIN_SUCCESS, LOGOUT, LOGOUT_FAILURE, SUCCESS, ERROR, LOGIN_FAILURE
 } from '../actions/types'
 
 export default function (state = {}, action) {
-  console.log('action', action)
+  console.log('action', action, state)
   switch (action.type) {
   case LOGIN_SUCCESS:
   case SUCCESS:
-    return action.payload
+  case LOGIN_FAILURE:
+  case ERROR:
+    // Object.assign(state, action.payload)
+    // console.log('Before', state)
+    // return state
+    return { ...state, ...action.payload }
   case LOGOUT:
   case LOGOUT_FAILURE:
-  case ERROR:
     return {}
   default:
     return state

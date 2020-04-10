@@ -1,17 +1,28 @@
 import React, { useEffect, useState } from 'react'
+import Loader from 'react-loader-spinner'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { loadUserChats } from '../../actions'
 
 function Contacts(props) {
   const [contactList, setContactList] = useState([])
+  const [loading, setLoading] = useState(true)
   const [currentContact, setCurrentContact] = useState({})
 
+  const initUserChats = async () => {
+    try {
+      if (!props.chat.list || !props.chat.list.length) {
+        await props.loadUserChats()
+      }
+    } catch (e) {
+      console.log('Failed to load user chats', e)
+    } finally {
+      setLoading(false)
+    }
+  }
   // Load chats on mount
   useEffect(() => {
-    if (!props.chat.list || !props.chat.list.length) {
-      props.loadUserChats()
-    }
+    initUserChats()
   }, [])
 
   // Update chats state based on store update
@@ -24,26 +35,29 @@ function Contacts(props) {
 
   return (
     <div className="contacts">
-      <ul>
-        {
-          contactList.map(contact => (
-            <li
-              className={contact._id === currentContact._id ? 'contact active' : 'contact'}
-              key={contact._id}
-              onClick={() => { setCurrentContact(contact); props.onChatSelect(contact) }}
-            >
-              <div className="wrap">
-                <span className="contact-status online" />
-                <img src={`data:image/png;base64,${contact.avatar}`} alt="" />
-                <div className="meta">
-                  <p className="name">{contact.name}</p>
-                  <p className="preview">{contact.about}</p>
-                </div>
-              </div>
-            </li>
-          ))
-        }
-      </ul>
+      {loading ? <Loader className="chatLoader" type="ThreeDots" height={80} width={80} />
+        : (
+          <ul>
+            {
+              contactList.map(contact => (
+                <li
+                  className={contact._id === currentContact._id ? 'contact active' : 'contact'}
+                  key={contact._id}
+                  onClick={() => { setCurrentContact(contact); props.onChatSelect(contact) }}
+                >
+                  <div className="wrap">
+                    <span className="contact-status online" />
+                    <img src={`data:image/png;base64,${contact.avatar}`} alt="" />
+                    <div className="meta">
+                      <p className="name">{contact.name}</p>
+                      <p className="preview">{contact.about}</p>
+                    </div>
+                  </div>
+                </li>
+              ))
+            }
+          </ul>
+        )}
     </div>
   )
 }

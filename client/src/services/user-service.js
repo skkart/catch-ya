@@ -3,8 +3,13 @@ import { setAuthToken, removeAuthToken } from '../utils/auth-helper'
 
 // remove user from local storage to log user out
 async function logout() {
-  await axios.get('/auth/logout')
-  removeAuthToken()
+  try {
+    await axios.post('/auth/logout')
+  } catch (e) {
+    console.log('Failed to logout')
+  } finally {
+    removeAuthToken()
+  }
 }
 
 
@@ -25,7 +30,6 @@ async function register (user) {
   const resp = await axios('/auth/register', user)
   return resp.data.user
 }
-
 
 
 export default {
