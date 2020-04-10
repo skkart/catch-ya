@@ -115,14 +115,16 @@ span.error {
     }
 }
 
-.chatLoader {
-    color: var(--main-bg-chat-color);
-}
-
 .chatLoader svg {
     display: block;
     margin: auto;
     fill: var(--main-bg-chat-color);
+}
+
+.chatLoaderMain svg {
+    display: block;
+    margin: auto;
+    fill: var(--main-chat-color);
 }
 
 .disabled-state {

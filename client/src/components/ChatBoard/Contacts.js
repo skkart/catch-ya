@@ -9,6 +9,11 @@ function Contacts(props) {
   const [loading, setLoading] = useState(true)
   const [currentContact, setCurrentContact] = useState({})
 
+  const onContactSelect = (ct) => {
+    setCurrentContact(ct)
+    props.onChatSelect(ct)
+  }
+
   const initUserChats = async () => {
     try {
       if (!props.chat.list || !props.chat.list.length) {
@@ -20,6 +25,8 @@ function Contacts(props) {
       setLoading(false)
     }
   }
+
+
   // Load chats on mount
   useEffect(() => {
     initUserChats()
@@ -29,6 +36,9 @@ function Contacts(props) {
   useEffect(() => {
     if (props.chat.list && props.chat.list.length) {
       setContactList([...props.chat.list])
+      if (!currentContact.name) {
+        onContactSelect(props.chat.list[0])
+      }
     }
   }, [props.chat])
 
@@ -43,7 +53,7 @@ function Contacts(props) {
                 <li
                   className={contact._id === currentContact._id ? 'contact active' : 'contact'}
                   key={contact._id}
-                  onClick={() => { setCurrentContact(contact); props.onChatSelect(contact) }}
+                  onClick={() => { onContactSelect(contact) }}
                 >
                   <div className="wrap">
                     <span className="contact-status online" />

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import Loader from 'react-loader-spinner'
 import './reset.min.css'
 import './chatboard.css'
 import SidePanel from './SidePanel'
@@ -23,7 +24,7 @@ export default function ChatBoard() {
       {chat && chat.room ?
         <ChatContent info={chat} />
         :
-        <div className="content">Click on any chat</div>
+        <Loader className="chatLoaderMain" type="ThreeDots" height={150} width={150} />
       }
     </div>
   )
