@@ -14,7 +14,7 @@ function Profile(props) {
           data-target="#updateUserProfile"
           data-whatever="@mdo"
         />
-        <p>{props.auth.name}</p>
+        <p className="profileName">{props.auth.name}</p>
         <div className="status-options">
           <ul>
             <li id="status-online" className="active">

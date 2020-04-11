@@ -897,3 +897,8 @@ div {
     color: var(--other-msg-color);
     cursor: pointer;
 }
+
+p.profileName {
+    font-weight: 700;
+    font-size: 17px;
+}
