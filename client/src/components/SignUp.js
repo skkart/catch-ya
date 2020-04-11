@@ -5,6 +5,7 @@ import { each } from 'lodash'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronCircleRight } from '@fortawesome/free-solid-svg-icons'
 import axios from 'axios'
+import { store } from 'react-notifications-component'
 import { loginUser } from '../actions'
 import { removeAuthToken } from '../utils/auth-helper'
 
@@ -96,7 +97,20 @@ function SignUp(props) {
     if (file) {
       const imageType = /image.*/
       if (!file || !file.type.match(imageType)) {
-        throw 'Invalid Image FIle'
+        store.addNotification({
+          title: 'Error!',
+          message: 'Invalid Image Format',
+          type: 'danger',
+          insert: 'top',
+          container: 'center',
+          animationIn: ['animated', 'fadeIn', 'jackInTheBox'],
+          animationOut: ['animated', 'fadeOut'],
+          dismiss: {
+            duration: 3000,
+            pauseOnHover: true
+          }
+        })
+        return
       }
 
       const reader = new FileReader()
@@ -132,13 +146,40 @@ function SignUp(props) {
         await axios.post(`/users/${added.data.user._id}/avatar`, formData, config)
       }
 
-      await props.loginUser({
-        email: signForm.email,
-        password: signForm.password,
-      }) // since we handle the redirect within our component, we don't need to pass in this.props.history as a parameter
+      // since we handle the redirect within our component, we don't need to pass in this.props.history as a parameter
+      // await props.loginUser({
+      //   email: signForm.email,
+      //   password: signForm.password,
+      // })
+      props.history.push('/sign-in')
+      store.addNotification({
+        title: 'Success',
+        message: 'Please sign-in once',
+        type: 'success',
+        insert: 'top',
+        container: 'center',
+        animationIn: ['animated', 'fadeIn', 'jackInTheBox'],
+        animationOut: ['animated', 'fadeOut'],
+        dismiss: {
+          duration: 3000,
+          pauseOnHover: true
+        }
+      })
     } catch (err) {
       console.log('Error on SignUp', err)
-      alert('Error on SignUp', err)
+      store.addNotification({
+        title: 'Try again !',
+        message: 'Failed to SignUp',
+        type: 'danger',
+        insert: 'top',
+        container: 'center',
+        animationIn: ['animated', 'fadeIn', 'jackInTheBox'],
+        animationOut: ['animated', 'fadeOut'],
+        dismiss: {
+          duration: 3000,
+          pauseOnHover: true
+        }
+      })
     }
   }
 

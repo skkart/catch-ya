@@ -1,7 +1,7 @@
-const multer = require('multer')
 const sharp = require('sharp')
 const ChatGroup = require('../models/chatgroup')
 const auth = require('../middleware/auth')
+const { upload } = require('../utils/general')
 
 module.exports = (router) => {
   router.post('/chatGroups', auth, async (req, res) => {
@@ -75,18 +75,6 @@ module.exports = (router) => {
     }
   })
 
-  const upload = multer({
-    limits: {
-      fileSize: 1000000
-    },
-    fileFilter(req, file, cb) {
-      if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-        return cb(new Error('Please upload an image'))
-      }
-
-      cb(undefined, true)
-    }
-  })
 
   router.post('/chatGroups/:id/avatar', auth, upload.single('avatar'), async (req, res) => {
     try {

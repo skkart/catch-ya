@@ -1,20 +1,35 @@
 import React, { useState } from 'react'
+import { connect } from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUserPlus, faUserFriends } from '@fortawesome/free-solid-svg-icons'
+import { faUserPlus, faUserFriends, faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
 import Profile from './Profile'
 import Search from './Search'
 import Contacts from './Contacts'
-import AddFormModel from './AddFormModel'
+import AddChatsModel from './AddChatsModel'
 import AddGroupModel from './AddGroupModel'
+import { logoutUser } from '../../actions'
 
 
-export default function SidePanel(props) {
+function SidePanel(props) {
   const [refreshCount, setRefreshCount] = useState(0)
+  const [searchText, setSearchText] = useState('')
+
+  const onLogoutClick = async e => {
+    e.preventDefault()
+    await props.logoutUser()
+    window.href = '/sign-in'
+  }
+
   return (
     <div className="sidepanel">
       <Profile />
-      <Search />
-      <Contacts onChatSelect={props.onChatSelect} />
+      <Search
+        className="search"
+        onChatSearch={(text) => {
+          setSearchText(text)
+        }}
+      />
+      <Contacts onChatSelect={props.onChatSelect} searchText={searchText} />
       <div className="bottom-bar">
         <button
           title="Find Contacts/Group"
@@ -35,9 +50,27 @@ export default function SidePanel(props) {
           <FontAwesomeIcon icon={faUserFriends} />
           <span style={{ paddingLeft: '5px' }}>Create Group</span>
         </button>
+        <button
+          style={{ width: '100%' }}
+          title="Logout"
+          onClick={onLogoutClick}
+        >
+          <FontAwesomeIcon icon={faSignOutAlt} />
+          <span style={{ paddingLeft: '5px' }}>Logout</span>
+        </button>
       </div>
-      <AddFormModel refreshCount={refreshCount} />
+      <AddChatsModel refreshCount={refreshCount} />
       <AddGroupModel />
     </div>
   )
 }
+
+
+const mapStateToProps = state => ({
+  auth: state.auth
+})
+
+export default connect(
+  mapStateToProps,
+  { logoutUser }
+)(SidePanel)

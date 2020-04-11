@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import moment from 'moment'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPaperclip, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import Message from './Message'
 import {
   joinGroup, registerMessage, registerRoomData, disJoinGroup, sendMessage
@@ -183,9 +183,9 @@ function MessageBlock(props) {
             onChange={onChange}
             onKeyPress={onKeyPress}
           />
-          <span>
-            <FontAwesomeIcon icon={faPaperclip} className="attachment" />
-          </span>
+          {/* <span> */}
+          {/* <FontAwesomeIcon icon={faPaperclip} className="attachment" /> */}
+          {/* </span> */}
           <button className="submit" onClick={sendMsg}>
             <FontAwesomeIcon icon={faPaperPlane} />
           </button>

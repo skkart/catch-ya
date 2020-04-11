@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react'
 import Loader from 'react-loader-spinner'
 import { connect } from 'react-redux'
 import axios from 'axios'
+import { store } from 'react-notifications-component'
 import './addGroupForm.css'
 import { loadUserChats } from '../../actions'
 
@@ -50,7 +51,19 @@ function AddGroupModel(props) {
       }
     } catch (err) {
       console.log('Error in Create group', err)
-      alert('Failed to create group: ', err)
+      store.addNotification({
+        title: 'Try again!!!',
+        message: 'Failed to create group',
+        type: 'danger',
+        insert: 'top',
+        container: 'center',
+        animationIn: ['animated', 'fadeIn', 'jackInTheBox'],
+        animationOut: ['animated', 'fadeOut'],
+        dismiss: {
+          duration: 3000,
+          pauseOnHover: true
+        }
+      })
     } finally {
       setSubmitted(false)
       setFlushAvatar(false)
@@ -64,7 +77,21 @@ function AddGroupModel(props) {
     if (file) {
       const imageType = /image.*/
       if (!file || !file.type.match(imageType)) {
-        throw 'Invalid Image FIle'
+        // throw new Error('Invalid Image File')
+        store.addNotification({
+          title: 'Error!',
+          message: 'Invalid Image Format',
+          type: 'danger',
+          insert: 'top',
+          container: 'center',
+          animationIn: ['animated', 'fadeIn', 'jackInTheBox'],
+          animationOut: ['animated', 'fadeOut'],
+          dismiss: {
+            duration: 3000,
+            pauseOnHover: true
+          }
+        })
+        return
       }
 
       const reader = new FileReader()
@@ -93,7 +120,7 @@ function AddGroupModel(props) {
       >
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title">Add New Group</h5>
+            <h5 className="modal-title">Create Group</h5>
             <button ref={closeButton} type="button" className="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>

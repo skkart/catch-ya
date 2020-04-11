@@ -1,20 +1,81 @@
 import React, { useEffect, useState, useRef } from 'react'
 import axios from 'axios'
+import { store } from 'react-notifications-component'
 import { connect } from 'react-redux'
 import { each } from 'lodash'
 import { loadUserChats } from '../../actions'
+import Search from './Search'
 
-function AddFormModel(props) {
+function AddChatsModel(props) {
   const closeButton = useRef(null)
+  const [allList, setAllList] = useState([])
   const [contactList, setContactList] = useState([])
   const [groupList, setGroupList] = useState([])
+  const [searchText, setSearchText] = useState('')
+
 
   const fetchAllConnections = async() => {
     const res = await axios.get('/users/connections/rest')
+    setAllList(res.data)
+  }
+
+  const addUser = async (chatObj) => {
+    if (!chatObj) {
+      return
+    }
+    try {
+      await axios.post('/users/connections/add', {
+        refId: chatObj._id,
+        refType: chatObj.email ? 'user' : 'chatgroup'
+      })
+      await props.loadUserChats()
+      store.addNotification({
+        title: 'Success',
+        message: 'Your chat selection is added!',
+        type: 'success',
+        insert: 'top',
+        container: 'center',
+        animationIn: ['animated', 'fadeIn', 'jackInTheBox'],
+        animationOut: ['animated', 'fadeOut'],
+        dismiss: {
+          duration: 2000
+        }
+      })
+      closeButton.current.click()
+    } catch (err) {
+      store.addNotification({
+        title: 'Try again!!!',
+        message: 'Failed to add your chat selection',
+        type: 'danger',
+        insert: 'top',
+        container: 'center',
+        animationIn: ['animated', 'fadeIn', 'jackInTheBox'],
+        animationOut: ['animated', 'fadeOut'],
+        dismiss: {
+          duration: 3000,
+          pauseOnHover: true
+        }
+      })
+    }
+  }
+
+  useEffect(() => {
+    fetchAllConnections()
+    console.log('Chat list refreshCount')
+  }, [props.refreshCount])
+
+  useEffect(() => {
     const ctList = []
     const gpList = []
-    if (res.data) {
-      each(res.data, (dt) => {
+    if (allList.length) {
+      each(allList, (dt) => {
+        if (searchText) {
+          const regex = new RegExp(searchText, 'i')
+          if (dt.name.search(regex) === -1) {
+            // Dont add
+            return
+          }
+        }
         if (dt.email) {
           ctList.push(dt)
         } else {
@@ -22,26 +83,10 @@ function AddFormModel(props) {
         }
       })
     }
+    console.log('use', searchText)
     setContactList(ctList)
     setGroupList(gpList)
-  }
-
-  const addUser = async (chatObj) => {
-    if (!chatObj) {
-      return
-    }
-    await axios.post('/users/connections/add', {
-      refId: chatObj._id,
-      refType: chatObj.email ? 'user' : 'chatgroup'
-    })
-    await props.loadUserChats()
-    closeButton.current.click()
-  }
-
-  useEffect(() => {
-    fetchAllConnections()
-    console.log('Chat list refreshCount')
-  }, [props.refreshCount])
+  }, [allList, searchText])
 
 
   return (
@@ -55,7 +100,7 @@ function AddFormModel(props) {
       <div className="modal-dialog modal-dialog-centered" role="document">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title">New Chat</h5>
+            <h5 className="modal-title">Find People/Groups</h5>
             <button ref={closeButton} type="button" className="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -63,12 +108,23 @@ function AddFormModel(props) {
           <div className="modal-body">
             <form>
               <div className="form-group mx-sm-3 mb-2">
-                <label htmlFor="inputFind" className="sr-only">Search chat</label>
-                <input type="text" className="form-control" id="inputFind" placeholder="Search" />
+                <Search
+                  className="searchModel"
+                  placeholder="Search People/Groups"
+                  onChatSearch={(text) => {
+                    setSearchText(text)
+                  }}
+                />
+                {/* <label htmlFor="inputFind" className="sr-only"> */}
+                {/* <FontAwesomeIcon icon={faSearch} aria-hidden="true" /> */}
+                {/* Search People/Groups */}
+                {/* </label> */}
+                {/* <FontAwesomeIcon icon={faSearch} aria-hidden="true" /> */}
+                {/* <input type="text" className="form-control" name="inputFind" placeholder="Search People/Groups" onKeyUp={e => debounceSearch(e.target.value)} /> */}
               </div>
               <div className="form-group mx-sm-3 mb-2 contacts">
                 {
-                  contactList.length &&
+                  contactList.length > 0 &&
                   <span className="list-suggestion">People</span>
                 }
                 <ul className="list-group">
@@ -81,7 +137,7 @@ function AddFormModel(props) {
                       }}
                     >
                       <div className="wrap">
-                        <span className="contact-status online" />
+                        {/* <span className="contact-status online" /> */}
                         <img src={`data:image/png;base64,${contact.avatar}`} alt="" />
                         <div className="meta">
                           <p className="name">{contact.name}</p>
@@ -93,7 +149,7 @@ function AddFormModel(props) {
                   }
                 </ul>
                 {
-                  groupList.length &&
+                  groupList.length > 0 &&
                   <span className="list-suggestion">Groups</span>
                 }
                 <ul className="list-group">
@@ -106,7 +162,7 @@ function AddFormModel(props) {
                       }}
                     >
                       <div className="wrap">
-                        <span className="contact-status online" />
+                        {/* <span className="contact-status online" /> */}
                         <img src={`data:image/png;base64,${contact.avatar}`} alt="" />
                         <div className="meta">
                           <p className="name">{contact.name}</p>
@@ -117,6 +173,10 @@ function AddFormModel(props) {
                   ))
                   }
                 </ul>
+                {
+                  (!contactList.length && !groupList.length) &&
+                  <span className="list-suggestion-not-found">No Users/Groups exists!!!</span>
+                }
               </div>
             </form>
           </div>
@@ -133,4 +193,4 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   { loadUserChats }
-)(AddFormModel)
+)(AddChatsModel)

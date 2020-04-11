@@ -35,16 +35,21 @@ function Contacts(props) {
   // Update chats state based on store update
   useEffect(() => {
     if (props.chat.list && props.chat.list.length) {
-      setContactList([...props.chat.list])
+      let chatList = props.chat.list
+      if (props.searchText) {
+        const regex = new RegExp(props.searchText, 'i')
+        chatList = props.chat.list.filter(ct => (ct.name.search(regex) > -1))
+      }
+      setContactList(chatList)
       if (!currentContact.name) {
         onContactSelect(props.chat.list[0])
       }
     }
-  }, [props.chat])
+  }, [props.chat, props.searchText])
 
 
   return (
-    <div className="contacts">
+    <div className="contacts sideContacts">
       {loading ? <Loader className="chatLoader" type="ThreeDots" height={80} width={80} />
         : (
           <ul>
@@ -55,8 +60,8 @@ function Contacts(props) {
                   key={contact._id}
                   onClick={() => { onContactSelect(contact) }}
                 >
-                  <div className="wrap">
-                    <span className="contact-status online" />
+                  <div className="wrap sideWrap">
+                    {/*<span className="contact-status online" />*/}
                     <img src={`data:image/png;base64,${contact.avatar}`} alt="" />
                     <div className="meta">
                       <p className="name">{contact.name}</p>

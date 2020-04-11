@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { each } from 'lodash'
 import { Link } from 'react-router-dom'
-import Loader from 'react-loader-spinner'
 import * as actions from '../actions'
 
 const emailRegex = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/

@@ -3,6 +3,7 @@ import Loader from 'react-loader-spinner'
 import { connect } from 'react-redux'
 import axios from 'axios'
 import './addGroupForm.css'
+import { store } from 'react-notifications-component'
 import { initUserAuth } from '../../actions'
 
 function UpdateUserModel(props) {
@@ -50,7 +51,19 @@ function UpdateUserModel(props) {
       }
     } catch (err) {
       console.log('Error in Update User', err)
-      alert('Failed to Update Profile: ', err)
+      store.addNotification({
+        title: 'Try again!!!',
+        message: 'Failed to update profile!!',
+        type: 'danger',
+        insert: 'top',
+        container: 'center',
+        animationIn: ['animated', 'fadeIn', 'jackInTheBox'],
+        animationOut: ['animated', 'fadeOut'],
+        dismiss: {
+          duration: 3000,
+          pauseOnHover: true
+        }
+      })
     } finally {
       setSubmitted(false)
     }
@@ -63,7 +76,20 @@ function UpdateUserModel(props) {
     if (file) {
       const imageType = /image.*/
       if (!file || !file.type.match(imageType)) {
-        throw 'Invalid Image FIle'
+        store.addNotification({
+          title: 'Error!',
+          message: 'Invalid Image Format',
+          type: 'danger',
+          insert: 'top',
+          container: 'center',
+          animationIn: ['animated', 'fadeIn', 'jackInTheBox'],
+          animationOut: ['animated', 'fadeOut'],
+          dismiss: {
+            duration: 3000,
+            pauseOnHover: true
+          }
+        })
+        return
       }
 
       const reader = new FileReader()
@@ -106,7 +132,7 @@ function UpdateUserModel(props) {
                   id="name"
                   placeholder="Enter Name"
                   value={userForm.name}
-                  disabled={true}
+                  disabled
                 />
               </div>
               <div className="form-group">
