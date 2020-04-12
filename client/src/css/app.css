@@ -45,7 +45,7 @@ body {
     font-family: "proxima-nova", "Source Sans Pro", sans-serif;
     font-size: 1em;
     letter-spacing: 0.1px;
-    color: var(--main-chat-color);
+    color: var(--main-body-bg-color);
     text-rendering: optimizeLegibility;
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);
     -webkit-font-smoothing: antialiased;
@@ -67,7 +67,6 @@ h1,h2,h3,h4,h5,h6,label,span {
     align-items: center;
     justify-content: center;
     min-height: 100%;
-    background: var(--main-bg-color);
     font-family: "proxima-nova", "Source Sans Pro", sans-serif;
     letter-spacing: 0.1px;
     color: var(--main-chat-color);

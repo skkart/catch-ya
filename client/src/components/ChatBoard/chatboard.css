@@ -4,6 +4,7 @@
     min-width: 360px;
     max-width: 1200px;
     height: 99%;
+    border: 2px solid;
     min-height: 250px;
     max-height: 970px;
     background: var(--main-bg-chat-color);
@@ -39,6 +40,7 @@
     .chat-board {
         width: 100%;
         height: 100vh;
+        border: 0px;
     }
 }
 
@@ -49,7 +51,7 @@
     width: 40%;
     height: 100%;
     background: var(--main-chat-sidebar-color);
-    color: var(--main-profile-color);;
+    color: var(--main-profile-color);
     overflow: hidden;
     position: relative;
 }
@@ -125,8 +127,8 @@
 
 @media screen and (max-width: 735px) {
     .chat-board .sidepanel .profile .wrap img {
-        width: 40px;
-        height: 40px;
+        width: 50px;
+        height: 50px;
         margin-left: 4px;
     }
 }
@@ -379,6 +381,7 @@
     border: none;
     background: var(--main-profile-color);
     color: var(--main-chat-color);
+    spellcheck: "false";
 }
 
 .chat-board .sidepanel .search input {
@@ -388,6 +391,7 @@
     border: none;
     background: var(--main-chat-color);
     color: var(--main-profile-color);
+    spellcheck: "false";
 }
 
 .chat-board .sidepanel .searchModel input:focus {
@@ -397,7 +401,6 @@
 
 .chat-board .sidepanel .search input:focus {
     outline: none;
-    background: var(--main-profile-color);
 }
 
 .chat-board .sidepanel .search input::-webkit-input-placeholder {
@@ -417,14 +420,16 @@
 }
 
 .chat-board .sidepanel .contacts {
-    height: calc(100% - 177px);
+    height: calc(100% - 225px);
     overflow-y: auto;
     overflow-x: hidden;
+    scrollbar-color: var(--main-body-bg-color);
+    scrollbar-width: 5px;
 }
 
 @media screen and (max-width: 735px) {
     .chat-board .sidepanel .contacts {
-        height: calc(100% - 149px);
+        height: calc(100% - 190px);
         overflow-y: auto;
         overflow-x: hidden;
     }
@@ -439,12 +444,14 @@
 }
 
 .chat-board .sidepanel .contacts::-webkit-scrollbar {
-    width: 8px;
+    width: 5px;
     background: var(--main-chat-sidebar-color);
 }
 
 .chat-board .sidepanel .contacts::-webkit-scrollbar-thumb {
-    background-color: #243140;
+    background-color: var(--main-profile-color);
+    scrollbar-color: var(--main-profile-color);
+    scrollbar-width: 5px;
 }
 
 
@@ -526,6 +533,7 @@
     width: 40px;
     border-radius: 50%;
     float: left;
+    cursor: pointer;
     margin-right: 10px;
 }
 
@@ -679,6 +687,7 @@ div {
     width: 40px;
     border-radius: 50%;
     float: left;
+    cursor: pointer;
     margin: 9px 12px 0 9px;
 }
 
@@ -722,12 +731,27 @@ div {
 }
 
 .chat-board .content .messages::-webkit-scrollbar {
-    width: 8px;
-    background: transparent;
+    width: 5px;
+    background: var(--main-chat-sidebar-color);
 }
 
+
 .chat-board .content .messages::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: var(--main-body-bg-color);
+    scrollbar-color: var(--main-body-bg-color);
+    scrollbar-width: 5px;
+}
+
+.messageblock::-webkit-scrollbar {
+    width: 5px;
+    background: var(--main-profile-color);
+}
+
+
+.messageblock::-webkit-scrollbar-thumb {
+    background-color: var(--main-chat-sidebar-color);
+    scrollbar-color: var(--main-chat-sidebar-color);
+    scrollbar-width: 5px;
 }
 
 .chat-board .content .messages ul li {

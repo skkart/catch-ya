@@ -132,13 +132,14 @@ class Login extends Component {
           {
             [(
               <button
+                key="submit"
                 type="submit"
                 className={this.props.auth.isLoginFailed ? 'btn btn-danger btn-block login-submit' : 'btn btn-primary btn-block login-submit'}
               >
                 Submit
               </button>),
-              (this.props.auth.isLoginFailed > 0 &&
-                <span className="error">Please provide a valid username and password.</span>)
+            (this.props.auth.isLoginFailed > 0 &&
+                <span key="error" className="error">Please provide a valid username and password.</span>)
             ]
           }
 
