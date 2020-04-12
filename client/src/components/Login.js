@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUser, faKey } from '@fortawesome/free-solid-svg-icons'
 import { each } from 'lodash'
 import { Link } from 'react-router-dom'
 import * as actions from '../actions'
@@ -92,32 +94,46 @@ class Login extends Component {
     return (
       <div className="auth-inner">
         <form className={this.state.submitted ? 'disabled-state' : ''} noValidate onSubmit={this.onSubmit}>
-          <h3>Sign In</h3>
-
+          <div
+            className="image loginImage mb-4"
+          />
+          <h3>Welcome to Catch-Ya!!!</h3>
           <div className="form-group">
-            <label>Email address</label>
-            <input
-              type="email"
-              className="form-control"
-              name="email"
-              placeholder="Enter email"
-              onChange={this.onChange}
-              value={this.state.email}
-            />
+            <div className="input-group">
+              <div className="input-group-append">
+                <span className="input-group-text">
+                  <FontAwesomeIcon icon={faUser} />
+                </span>
+              </div>
+              <input
+                type="email"
+                className="form-control"
+                name="email"
+                placeholder="Enter email"
+                onChange={this.onChange}
+                value={this.state.email}
+              />
+            </div>
             {errors.email.length > 0 &&
           <span className="error">{errors.email}</span>}
           </div>
 
           <div className="form-group">
-            <label>Password</label>
-            <input
-              type="password"
-              name="password"
-              className="form-control"
-              placeholder="Enter password"
-              onChange={this.onChange}
-              value={this.state.password}
-            />
+            <div className="input-group">
+              <div className="input-group-append">
+                <span className="input-group-text">
+                  <FontAwesomeIcon icon={faKey} />
+                </span>
+              </div>
+              <input
+                type="password"
+                name="password"
+                className="form-control"
+                placeholder="Enter password"
+                onChange={this.onChange}
+                value={this.state.password}
+              />
+            </div>
             {errors.password.length > 0 &&
           <span className="error">{errors.password}</span>}
           </div>
@@ -136,7 +152,7 @@ class Login extends Component {
                 type="submit"
                 className={this.props.auth.isLoginFailed ? 'btn btn-danger btn-block login-submit' : 'btn btn-primary btn-block login-submit'}
               >
-                Submit
+                Sign-In
               </button>),
             (this.props.auth.isLoginFailed > 0 &&
                 <span key="error" className="error">Please provide a valid username and password.</span>)

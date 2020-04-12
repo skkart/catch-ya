@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
-import Loader from 'react-loader-spinner'
-import './reset.min.css'
-import './chatboard.css'
+import '../../css/reset.min.css'
+import '../../css/chatboard.css'
 import SidePanel from './SidePanel'
 import ChatContent from './ChatContent'
 import { destroySocket, initSocket } from '../../chat'
@@ -26,8 +25,7 @@ function ChatBoard(props) {
       {chat && chat.room ?
         <ChatContent info={chat} />
         :
-        props.chat.list && props.chat.list.length ?
-          <Loader className="chatLoaderMain" type="ThreeDots" height={150} width={150} /> : <WelcomeScreen />
+        (!props.chat.list || !props.chat.list.length) && <WelcomeScreen />
       }
     </div>
   )

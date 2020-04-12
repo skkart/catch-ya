@@ -716,14 +716,12 @@ div {
 }
 
 .welcomeScreen {
-    background-image: url("../../images/chatBg.jpg");
+    background-image: url("../images/chatBg.jpg");
     height: 100%;
-    overflow-y: scroll;
-    overflow-x: hidden;
 }
 
 .welcomeScreen .image {
-    background-image: url("../../images/chat.svg");
+    background-image: url("../images/chat.svg");
     height: 100px;
     width: 100px;
     position: relative;
@@ -734,12 +732,18 @@ div {
     margin: auto;
 }
 
+.welcomeScreen .loginImage {
+    background-image: url("../images/chat.svg");
+    height: 30px;
+    width: 30px;
+}
+
 .welcomeScreen .text-center {
     margin-bottom: 20px;
 }
 
 .chat-board .content .messageblock {
-    background-image: url("../../images/chatBg.jpg");
+    background-image: url("../images/chatBg.jpg");
 }
 
 @media screen and (max-width: 835px) {
