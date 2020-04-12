@@ -47,7 +47,7 @@
     position: relative;
 }
 
-@media screen and (max-width: 735px) {
+@media screen and (max-width: 835px) {
     .chat-board .sidepanel {
         width: 58px;
         min-width: 58px;
@@ -59,7 +59,7 @@
     margin: 25px auto;
 }
 
-@media screen and (max-width: 735px) {
+@media screen and (max-width: 835px) {
     .chat-board .sidepanel .profile {
         width: 100%;
         margin: 0 auto;
@@ -96,7 +96,7 @@
     transition: 0.3s height ease;
 }
 
-@media screen and (max-width: 735px) {
+@media screen and (max-width: 835px) {
     .chat-board .sidepanel .profile .wrap {
         height: 55px;
     }
@@ -116,7 +116,7 @@
     transition: 0.3s border ease;
 }
 
-@media screen and (max-width: 735px) {
+@media screen and (max-width: 835px) {
     .chat-board .sidepanel .profile .wrap img {
         width: 50px;
         height: 50px;
@@ -145,7 +145,7 @@
     margin-left: 15px;
 }
 
-@media screen and (max-width: 735px) {
+@media screen and (max-width: 835px) {
     .chat-board .sidepanel .profile .wrap p {
         display: none;
     }
@@ -159,7 +159,7 @@
     color: #435f7a;
 }
 
-@media screen and (max-width: 735px) {
+@media screen and (max-width: 835px) {
     .chat-board .sidepanel .profile .wrap .expand-button{
         display: none;
     }
@@ -181,7 +181,7 @@
     transition: 0.3s all ease;
 }
 
-@media screen and (max-width: 735px) {
+@media screen and (max-width: 835px) {
     .chat-board .sidepanel .profile .wrap .status-options {
         width: 58px;
         margin-top: 57px;
@@ -194,7 +194,7 @@
     margin: 75px 0 0 0;
 }
 
-@media screen and (max-width: 735px) {
+@media screen and (max-width: 835px) {
     .chat-board .sidepanel .profile .wrap .status-options.active {
         margin-top: 62px;
     }
@@ -211,7 +211,7 @@
     margin: -8px 0 0 24px;
 }
 
-@media screen and (max-width: 735px) {
+@media screen and (max-width: 835px) {
     .chat-board .sidepanel .profile .wrap .status-options:before {
         margin-left: 23px;
     }
@@ -228,7 +228,7 @@
     cursor: pointer;
 }
 
-@media screen and (max-width: 735px) {
+@media screen and (max-width: 835px) {
     .chat-board .sidepanel .profile .wrap .status-options ul li {
         padding: 15px 0 35px 22px;
     }
@@ -246,7 +246,7 @@
     margin: 5px 0 0 0;
 }
 
-@media screen and (max-width: 735px) {
+@media screen and (max-width: 835px) {
     .chat-board .sidepanel .profile .wrap .status-options ul li span.status-circle {
         width: 14px;
         height: 14px;
@@ -264,7 +264,7 @@
     z-index: 0;
 }
 
-@media screen and (max-width: 735px) {
+@media screen and (max-width: 835px) {
     .chat-board .sidepanel .profile .wrap .status-options ul li span.status-circle:before {
         height: 18px;
         width: 18px;
@@ -275,7 +275,7 @@
     padding-left: 12px;
 }
 
-@media screen and (max-width: 735px) {
+@media screen and (max-width: 835px) {
     .chat-board .sidepanel .profile .wrap .status-options ul li p {
         display: none;
     }
@@ -353,7 +353,7 @@
     font-weight: 300;
 }
 
-@media screen and (max-width: 735px) {
+@media screen and (max-width: 835px) {
     .chat-board .sidepanel .search {
         display: none;
     }
@@ -418,7 +418,7 @@
     scrollbar-width: 5px;
 }
 
-@media screen and (max-width: 735px) {
+@media screen and (max-width: 835px) {
     .chat-board .sidepanel .contacts {
         height: calc(100% - 190px);
         overflow-y: auto;
@@ -466,7 +466,7 @@
     vertical-align: baseline;
 }
 
-@media screen and (max-width: 735px) {
+@media screen and (max-width: 835px) {
     .chat-board .sidepanel .sideContacts ul li.contact {
         padding: 6px 0 46px 8px;
     }
@@ -491,7 +491,7 @@
     position: relative;
 }
 
-@media screen and (max-width: 735px) {
+@media screen and (max-width: 835px) {
     .chat-board .sidepanel .contacts ul li.contact .wrap {
         width: 100%;
     }
@@ -528,7 +528,7 @@
     margin-right: 10px;
 }
 
-@media screen and (max-width: 735px) {
+@media screen and (max-width: 835px) {
     .chat-board .sidepanel .contacts ul li.contact .sideWrap img {
         margin-right: 0px;
     }
@@ -551,7 +551,7 @@ div {
     vertical-align: baseline;
 }
 
-@media screen and (max-width: 735px) {
+@media screen and (max-width: 835px) {
     .chat-board .sidepanel .contacts ul li.contact .sideWrap .meta {
         display: none;
     }
@@ -602,7 +602,7 @@ div {
     font-family: "proxima-nova", "Source Sans Pro", sans-serif;
 }
 
-@media screen and (max-width: 735px) {
+@media screen and (max-width: 835px) {
     .chat-board .sidepanel .bottom-bar button {
         float: none;
         width: 100%;
@@ -618,7 +618,7 @@ div {
     border-right: 1px solid var(--main-chat-sidebar-color);
 }
 
-@media screen and (max-width: 735px) {
+@media screen and (max-width: 835px) {
     .chat-board .sidepanel .bottom-bar button:nth-child(1) {
         border-right: none;
         border-bottom: 1px solid var(--main-chat-sidebar-color);
@@ -634,13 +634,13 @@ div {
     font-size: 1em;
 }
 
-@media screen and (max-width: 735px) {
+@media screen and (max-width: 835px) {
     .chat-board .sidepanel .bottom-bar button i {
         font-size: 1.3em;
     }
 }
 
-@media screen and (max-width: 735px) {
+@media screen and (max-width: 835px) {
     .chat-board .sidepanel .bottom-bar button span {
         display: none;
     }
@@ -654,7 +654,7 @@ div {
     position: relative;
 }
 
-@media screen and (max-width: 735px) {
+@media screen and (max-width: 835px) {
     .chat-board .content {
         width: calc(100% - 58px);
         min-width: 300px !important;
@@ -742,7 +742,7 @@ div {
     background-image: url("../../images/chatBg.jpg");
 }
 
-@media screen and (max-width: 735px) {
+@media screen and (max-width: 835px) {
     .chat-board .content .messages {
         max-height: calc(100% - 105px);
     }
@@ -844,7 +844,7 @@ div {
     line-height: 130%;
 }
 
-@media screen and (min-width: 735px) {
+@media screen and (min-width: 835px) {
     .chat-board .content .messages ul li p {
         max-width: 300px;
     }
@@ -871,7 +871,7 @@ div {
     color: var(--main-chat-color);
 }
 
-@media screen and (max-width: 735px) {
+@media screen and (max-width: 835px) {
     .chat-board .content .message-input .wrap input {
         padding: 15px 32px 16px 8px;
     }
@@ -882,8 +882,8 @@ div {
 }
 
 .chat-board .content .message-input .wrap .attachment {
-    position: absolute;
-    right: 60px;
+    position: fixed;
+    right: 70px;
     z-index: 4;
     margin-top: 10px;
     font-size: 1.1em;
@@ -892,10 +892,10 @@ div {
     cursor: pointer;
 }
 
-@media screen and (max-width: 735px) {
+@media screen and (max-width: 835px) {
     .chat-board .content .message-input .wrap .attachment {
         margin-top: 17px;
-        right: 65px;
+        right: 70px;
     }
 }
 
@@ -913,7 +913,7 @@ div {
     color: var(--main-profile-color);
 }
 
-@media screen and (max-width: 735px) {
+@media screen and (max-width: 835px) {
     .chat-board .content .message-input .wrap button {
         padding: 16px 0;
     }
@@ -1123,5 +1123,40 @@ i.material-icons {
         opacity: 0;
         -webkit-transform: scale(2.5);
         transform: scale(2.5);
+    }
+}
+
+.emoji-box {
+    float: right;
+    width: 95%;
+}
+
+.hide {
+   display: none !important;
+}
+
+.wrapSmily {
+    display: block;
+    float: right;
+}
+
+@media screen and (max-width: 835px) {
+    .emoji-box {
+        float: right;
+        width: 95%;
+    }
+}
+
+aside.emoji-picker-react {
+    width: auto !important;
+}
+
+.messages ul li p {
+    font-size: 17px;
+}
+
+@media screen and (max-width: 835px) {
+    .messages ul li p {
+        font-size: 15px;
     }
 }

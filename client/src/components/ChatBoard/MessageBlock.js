@@ -1,17 +1,30 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { connect } from 'react-redux'
 import moment from 'moment'
+import Picker, { SKIN_TONE_NEUTRAL } from 'emoji-picker-react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
+import { faPaperPlane, faSmileBeam } from '@fortawesome/free-solid-svg-icons'
 import Message from './Message'
 import {
   joinGroup, registerMessage, registerRoomData, disJoinGroup, sendMessage
 } from '../../chat'
+import useOutsideClicker from './OutsideClicker'
 
 function MessageBlock(props) {
   const [chatList, setChatList] = useState([])
   const [showChat, setShowChat] = useState(false)
   const [msg, setMsg] = useState('')
+  const [showEmoji, setShowEmoji] = useState(false)
+  const [chosenEmoji, setChosenEmoji] = useState(null)
+  const inputMsgRef = useRef(null)
+  useOutsideClicker(inputMsgRef, () => {
+    setShowEmoji(false)
+  })
+
+  const onEmojiClick = (event, emojiObject) => {
+    setChosenEmoji(emojiObject)
+    setMsg((m) => (m + emojiObject.emoji))
+  }
 
 
   const username = props.auth.name.toLowerCase()
@@ -73,6 +86,9 @@ function MessageBlock(props) {
 
   // onSend Method
   const onMyMessageSend = (text) => {
+    if (!text) {
+      return
+    }
     sendMessage(text, () => {
       console.log('MyMsg sed', text)
       setChatList([...chatList, {
@@ -81,6 +97,7 @@ function MessageBlock(props) {
         text
       }])
       setMsg('')
+      setShowEmoji(false)
       scrollToBottom()
     })
   }
@@ -174,7 +191,10 @@ function MessageBlock(props) {
         </ul>
         <span id="scrollMsgBlock">scroll block</span>
       </div>
-      <div className="message-input">
+      <div ref={inputMsgRef} className="message-input">
+        <div className={showEmoji ? 'emoji-box' : 'hide'}>
+          <Picker onEmojiClick={onEmojiClick} skinTone={SKIN_TONE_NEUTRAL} />
+        </div>
         <div className="wrap">
           <input
             type="text"
@@ -183,9 +203,9 @@ function MessageBlock(props) {
             onChange={onChange}
             onKeyPress={onKeyPress}
           />
-          {/* <span> */}
-          {/* <FontAwesomeIcon icon={faPaperclip} className="attachment" /> */}
-          {/* </span> */}
+          <div className="wrapSmily" onClick={() => setShowEmoji((r) => !r)}>
+            <FontAwesomeIcon icon={faSmileBeam} className="attachment" />
+          </div>
           <button className="submit" onClick={sendMsg}>
             <FontAwesomeIcon icon={faPaperPlane} />
           </button>
