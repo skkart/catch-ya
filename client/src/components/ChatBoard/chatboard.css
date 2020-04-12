@@ -715,6 +715,33 @@ div {
     visibility: hidden;
 }
 
+.welcomeScreen {
+    background-image: url("../../images/chatBg.jpg");
+    height: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.welcomeScreen .image {
+    background-image: url("../../images/chat.svg");
+    height: 100px;
+    width: 100px;
+    position: relative;
+    overflow: hidden;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin: auto;
+}
+
+.welcomeScreen .text-center {
+    margin-bottom: 20px;
+}
+
+.chat-board .content .messageblock {
+    background-image: url("../../images/chatBg.jpg");
+}
+
 @media screen and (max-width: 735px) {
     .chat-board .content .messages {
         max-height: calc(100% - 105px);

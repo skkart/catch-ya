@@ -38,9 +38,10 @@ class App extends Component {
       return (<Loader className="chatLoader" type="ThreeDots" height={250} width={250} />)
     }
 
+    const isLoggedIn = this.props.auth && this.props.auth.email
     return (
       <Router>
-        <div className="App">
+        <div className={isLoggedIn ? 'App' : 'App welcomeScreen'}>
           <ReactNotification />
           <div className="auth-wrapper">
             <Switch>

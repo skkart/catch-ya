@@ -6,6 +6,7 @@ import './chatboard.css'
 import SidePanel from './SidePanel'
 import ChatContent from './ChatContent'
 import { destroySocket, initSocket } from '../../chat'
+import WelcomeScreen from './WelcomeScreen'
 
 
 function ChatBoard(props) {
@@ -26,7 +27,7 @@ function ChatBoard(props) {
         <ChatContent info={chat} />
         :
         props.chat.list && props.chat.list.length ?
-          <Loader className="chatLoaderMain" type="ThreeDots" height={150} width={150} /> : <div>Welcome to CatchYa!!!</div>
+          <Loader className="chatLoaderMain" type="ThreeDots" height={150} width={150} /> : <WelcomeScreen />
       }
     </div>
   )
