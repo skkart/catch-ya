@@ -2,7 +2,6 @@ import React, { useState, useRef } from 'react'
 import Loader from 'react-loader-spinner'
 import { connect } from 'react-redux'
 import axios from 'axios'
-import './addGroupForm.css'
 import { store } from 'react-notifications-component'
 import { initUserAuth } from '../../actions'
 
@@ -124,24 +123,28 @@ function UpdateUserModel(props) {
           </div>
           <div className="modal-body">
             <form noValidate onSubmit={onUserSubmit}>
-              <div className="form-group">
-                <label htmlFor="name">User Name</label>
+              <div className="input-group mb-3">
+                <div className="input-group-prepend">
+                  <span className="input-group-text" id="usrname">Name</span>
+                </div>
                 <input
                   type="text"
-                  className="form-control form-control-lg"
-                  id="name"
-                  placeholder="Enter Name"
+                  className="form-control"
+                  aria-label="Default"
+                  aria-describedby="usrname"
                   value={userForm.name}
                   disabled
                 />
               </div>
-              <div className="form-group">
-                <label htmlFor="status">Status</label>
+              <div className="input-group mb-3">
+                <div className="input-group-prepend">
+                  <span className="input-group-text" id="usrstatus">Status</span>
+                </div>
                 <input
                   type="text"
-                  className="form-control form-control-lg"
-                  id="status"
-                  placeholder="Enter Status"
+                  className="form-control"
+                  aria-label="Default"
+                  aria-describedby="usrstatus"
                   value={userForm.about}
                   onChange={(e) => {
                     setUserForm({
@@ -151,8 +154,8 @@ function UpdateUserModel(props) {
                   }}
                 />
               </div>
-              <div className="form-group">
-                <label>Upload Profile Picture</label>
+              <div className="form-group picture">
+                <span className="input-group-text">Profile Picture</span>
                 <div className="image-wrapper">
                   <div className="box">
                     <div

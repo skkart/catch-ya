@@ -3,7 +3,6 @@ import Loader from 'react-loader-spinner'
 import { connect } from 'react-redux'
 import axios from 'axios'
 import { store } from 'react-notifications-component'
-import './addGroupForm.css'
 import { loadUserChats } from '../../actions'
 
 function AddGroupModel(props) {
