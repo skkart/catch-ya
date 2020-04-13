@@ -366,7 +366,6 @@
 }
 
 .chat-board .sidepanel .searchModel input {
-    font-family: "proxima-nova", "Source Sans Pro", sans-serif;
     padding: 10px 0 10px 46px;
     width: 100%;
     border: none;
@@ -376,7 +375,6 @@
 }
 
 .chat-board .sidepanel .search input {
-    font-family: "proxima-nova", "Source Sans Pro", sans-serif;
     padding: 10px 0 10px 46px;
     width: 100%;
     border: none;
@@ -599,7 +597,6 @@ div {
     color: var(--main-profile-color);;
     cursor: pointer;
     font-size: 0.85em;
-    font-family: "proxima-nova", "Source Sans Pro", sans-serif;
 }
 
 @media screen and (max-width: 835px) {
@@ -865,33 +862,34 @@ div {
     position: relative;
 }
 
-.chat-board .content .message-input .wrap input {
-    font-family: "proxima-nova", "Source Sans Pro", sans-serif;
+.chat-board .content .message-input .wrap textarea {
     float: left;
     border: none;
     width: calc(100% - 50px);
-    padding: 11px 32px 10px 8px;
-    font-size: 0.8em;
+    padding: 7px 32px 7px 8px;
+    font-size: 16px;
+    height: 40px;
     color: var(--main-chat-color);
 }
 
 @media screen and (max-width: 835px) {
-    .chat-board .content .message-input .wrap input {
+    .chat-board .content .message-input .wrap textarea {
         padding: 15px 32px 16px 8px;
+        height: 48px;
     }
 }
 
-.chat-board .content .message-input .wrap input:focus {
+.chat-board .content .message-input .wrap textarea:focus {
     outline: none;
 }
 
 .chat-board .content .message-input .wrap .attachment {
-    position: fixed;
-    right: 70px;
+    position: absolute;
+    right: 58px;
     z-index: 4;
     margin-top: 10px;
     font-size: 1.1em;
-    color: #435f7a;
+    color: var(--main-chat-sidebar-color);
     opacity: .5;
     cursor: pointer;
 }
@@ -899,7 +897,6 @@ div {
 @media screen and (max-width: 835px) {
     .chat-board .content .message-input .wrap .attachment {
         margin-top: 17px;
-        right: 70px;
     }
 }
 
@@ -963,6 +960,8 @@ p.profileName {
 .modal-header {
     background: var(--main-chat-sidebar-color);
     color: var(--main-profile-color);
+    font-weight: 700;
+    font-size: 17px;
 }
 
 .picture .input-group-text{

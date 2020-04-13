@@ -23,6 +23,8 @@ function MessageBlock(props) {
 
   const onEmojiClick = (event, emojiObject) => {
     setChosenEmoji(emojiObject)
+    console.log(emojiObject)
+    window.emo = emojiObject
     setMsg((m) => (m + emojiObject.emoji))
   }
 
@@ -196,7 +198,7 @@ function MessageBlock(props) {
           <Picker onEmojiClick={onEmojiClick} skinTone={SKIN_TONE_NEUTRAL} />
         </div>
         <div className="wrap">
-          <input
+          <textarea
             type="text"
             placeholder="Write your message..."
             value={msg}
