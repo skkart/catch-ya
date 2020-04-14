@@ -65,8 +65,11 @@ function MessageBlock(props) {
 
   // On Room update
   useEffect(() => {
+    console.log('Useeff', room)
     // Join the group and register to socket events
     const messageReceiver = (othersMsg) => {
+      console.log('othersMsg.room', othersMsg.room)
+      console.log('props.info.room', room)
       if (othersMsg.room === room) {
         // update the received msg
         setChatList(chatListOld => [...chatListOld, othersMsg])
@@ -84,10 +87,12 @@ function MessageBlock(props) {
 
     // Return unmount
     return () => {
+      console.log('Useeff unmount', room)
       setChatList([])
       unregisterMessage(messageReceiver)
       disJoinGroup({
         userId,
+        username,
         room
       }, () => {
         console.log('Disjoin group')
@@ -101,12 +106,8 @@ function MessageBlock(props) {
     if (!text) {
       return
     }
-    sendMessage({
-      userId,
-      room,
-      username,
-      message: text
-    }, () => {
+    sendMessage({text}, () => {
+      console.log('MyMsg sed', text)
       setChatList([...chatList, {
         username,
         createdAt: new Date().getTime(),

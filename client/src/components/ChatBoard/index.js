@@ -12,10 +12,12 @@ function ChatBoard(props) {
   const [chat, setChat] = useState(null)
 
   useEffect(() => {
+    console.log('Init socket')
     initSocket()
 
     return () => {
-      destroySocket()
+      console.log('destroy socket', props.auth._id)
+      destroySocket(props.auth._id)
     }
   }, [])
 
@@ -32,7 +34,8 @@ function ChatBoard(props) {
 }
 
 const mapStateToProps = state => ({
-  chat: state.chat
+  chat: state.chat,
+  auth: state.auth
 })
 
 export default connect(

@@ -3,7 +3,7 @@ import io from 'socket.io-client'
 let socket = null
 
 export const initSocket = () => {
-  socket = io()
+  socket = io({ forceNew: true })
 }
 
 
@@ -47,10 +47,16 @@ export const registerMessage = (cb) => {
   if (!socket) {
     return
   }
-  socket.on('message', (message) => {
-    console.log('Rec Msg', message)
-    cb(message)
-  })
+  socket.on('message', cb)
+}
+
+export const unregisterMessage = (cb) => {
+  if (!socket) {
+    return
+  }
+
+  socket.off('message', cb)
+  socket.removeListener('message', cb)
 }
 
 export const registerRoomData = (cb) => {
@@ -62,51 +68,18 @@ export const registerRoomData = (cb) => {
   })
 }
 
-
-export const destroySocket = () => {
+export const emitKeepAlive = (errorCb) => {
   if (!socket) {
     return
   }
+  socket.emit('keepAlive', errorCb)
+}
+
+export const destroySocket = (userId) => {
+  if (!socket) {
+    return
+  }
+  socket.emit('disconnectChat', userId)
   socket.disconnect()
   socket = null
 }
-
-//
-// socket.on('message', (message) => {
-//   console.log(message)
-//   const html = Mustache.render(messageTemplate, {
-//     username: message.username,
-//     message: message.text,
-//     createdAt: moment(message.createdAt).format('h:mm a')
-//   })
-//   $messages.insertAdjacentHTML('beforeend', html)
-// })
-//
-//
-// socket.on('roomData', ({ room, users }) => {
-//   const html = Mustache.render(sidebarTemplate, {
-//     room,
-//     users
-//   })
-//   document.querySelector('#sidebar').innerHTML = html
-// })
-//
-// $messageForm.addEventListener('submit', (e) => {
-//   e.preventDefault()
-//
-//   $messageFormButton.setAttribute('disabled', 'disabled')
-//
-//   const message = e.target.elements.message.value
-//
-//   socket.emit('sendMessage', message, (error) => {
-//     $messageFormButton.removeAttribute('disabled')
-//     $messageFormInput.value = ''
-//     $messageFormInput.focus()
-//
-//     if (error) {
-//       return console.log(error)
-//     }
-//
-//     console.log('Message delivered!')
-//   })
-// })

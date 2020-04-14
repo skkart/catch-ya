@@ -10,7 +10,7 @@ import 'bootstrap/dist/js/bootstrap'
 import { connect } from 'react-redux'
 import { logoutUser, initUserAuth } from './actions'
 
-//Import all CSS for App
+// Import all CSS for App
 import 'react-notifications-component/dist/theme.css'
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css'
 import 'bootstrap/dist/css/bootstrap.css'

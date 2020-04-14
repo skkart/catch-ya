@@ -43,8 +43,8 @@ io.on('connection', (socket) => {
   console.log('New WebSocket connection id', socket.id)
 
   socket.on('join', (options, callback) => {
-    console.log('Join', options.userId)
-    const { error, user } = addUser({ id: options.userId, ...options })
+    console.log('Join', socket.id)
+    const { error, user } = addUser({ id: socket.id, ...options })
 
     if (error || !user) {
       console.log('Error', (error || 'user not found'))
@@ -80,25 +80,27 @@ io.on('connection', (socket) => {
 
   socket.on('keepAlive', (callback) => {
     console.log('keepAlive', socket.id)
+    const user = getUser(socket.id)
+    if (!user) {
+      console.log('User Not found')
+      callback && callback('user not found')
+    }
   })
 
-  socket.on('sendMessage', ({
-    userId, message, room, username
-  }, callback) => {
-    console.log('sendMessage', userId)
-    // const user = getUser(userId)
-    // const { room, username } = user
-    // if (!user) {
-    //   console.log('User Not found')
-    //   return
-    // }
-    io.to(room).emit('message', generateMessage(username, message, room, chatLogger[room]))
+  socket.on('sendMessage', (message, callback) => {
+    console.log('sendMessage', socket.id)
+    const user = getUser(socket.id)
+    if (!user) {
+      console.log('User Not found')
+      return
+    }
+    io.to(user.room).emit('message', generateMessage(user.username, message, user.room, chatLogger[user.room]))
     callback()
   })
 
   socket.on('sendLocation', (coords, callback) => {
-    console.log('sendLocation', coords.userId)
-    const user = getUser(coords.userId)
+    console.log('sendLocation', socket.id)
+    const user = getUser(socket.id)
     if (!user) {
       console.log('User Not found')
       return
@@ -108,8 +110,8 @@ io.on('connection', (socket) => {
   })
 
   socket.on('disJoin', (options, callback) => {
-    console.log('disJoin', options.userId)
-    const user = removeUser(options.userId)
+    console.log('disJoin', socket.id)
+    const user = removeUser(socket.id)
     if (!user) {
       console.log('User Not found')
       return callback('User not found')
@@ -126,15 +128,20 @@ io.on('connection', (socket) => {
     }
   })
 
-  socket.on('disconnectChat', (userId) => {
-    console.log('disconnectChat', userId)
-    const user = removeUser(userId)
+  socket.on('disconnect', () => {
+    console.log('disconnect', socket.id)
+    const user = removeUser(socket.id)
 
     if (!user) {
       console.log('User Not found')
       return
     }
 
+    // io.to(user.room).emit('message', generateMessage('Admin', `${user.username} has left!`, chatLogger[user.room]))
+    // io.to(user.room).emit('roomData', {
+    //   room: user.room,
+    //   users: getUsersInRoom(user.room),
+    // })
     // Close the chatLogger only if all the users are disJoined
     const allUserInSameRoom = getUsersInRoom(user.room)
     if (allUserInSameRoom.length === 0) {
@@ -143,10 +150,6 @@ io.on('connection', (socket) => {
       chatLogger[user.room].close()
       chatLogger[user.room] = null
     }
-  })
-
-  socket.on('disconnect', () => {
-    console.log('disconnect', socket.id)
   })
 })
 
