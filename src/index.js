@@ -13,7 +13,6 @@ const port = process.env.PORT || 5000
 const publicDirectoryPath = path.join(__dirname, '../public')
 
 app.use(express.static(publicDirectoryPath))
-// app.use('/resources', express.static(__dirname, '../public/img'))
 
 app.use(express.json())
 require('./routers/auth')(app)
@@ -86,12 +85,6 @@ io.on('connection', (socket) => {
     userId, message, room, username
   }, callback) => {
     console.log('sendMessage', userId)
-    // const user = getUser(userId)
-    // const { room, username } = user
-    // if (!user) {
-    //   console.log('User Not found')
-    //   return
-    // }
     io.to(room).emit('message', generateMessage(username, message, room, chatLogger[room]))
     callback()
   })
@@ -107,42 +100,33 @@ io.on('connection', (socket) => {
     callback()
   })
 
-  socket.on('disJoin', (options, callback) => {
-    console.log('disJoin', options.userId)
-    const user = removeUser(options.userId)
-    if (!user) {
-      console.log('User Not found')
-      return callback('User not found')
-    }
-
-
-    // Close the chatLogger only if all the users are disJoined
-    const allUserInSameRoom = getUsersInRoom(user.room)
-    if (allUserInSameRoom.length === 0) {
-      console.log('Close chatLogger')
-      chatLogger[user.room].end()
-      chatLogger[user.room].close()
-      chatLogger[user.room] = null
-    }
-  })
-
-  socket.on('disconnectChat', (userId) => {
-    console.log('disconnectChat', userId)
+  const removeChatUser = (userId, callback) => {
     const user = removeUser(userId)
 
     if (!user) {
       console.log('User Not found')
-      return
+      return callback && callback('User not found')
     }
 
     // Close the chatLogger only if all the users are disJoined
     const allUserInSameRoom = getUsersInRoom(user.room)
     if (allUserInSameRoom.length === 0) {
-      console.log('Close chatLogger')
+      console.log('Close ChatLogger for room: ', user.room)
       chatLogger[user.room].end()
       chatLogger[user.room].close()
       chatLogger[user.room] = null
     }
+  }
+
+  socket.on('disJoin', (options, callback) => {
+    console.log('disJoin', options.userId)
+    removeChatUser(options.userId, callback)
+  })
+
+
+  socket.on('disconnectChat', (userId) => {
+    console.log('disconnectChat', userId)
+    removeChatUser(userId)
   })
 
   socket.on('disconnect', () => {
