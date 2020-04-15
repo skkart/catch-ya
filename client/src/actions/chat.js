@@ -5,7 +5,6 @@ import { getGroupName } from '../utils/auth-helper'
 
 export const loadUserChats = () => async (dispatch, getState) => {
   try {
-    window.myState = getState
     const { auth } = getState()
     const resp = await axios('/users/connections')
     const newChats = resp.data.map(({

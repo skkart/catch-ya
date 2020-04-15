@@ -29,8 +29,6 @@ function MessageBlock(props) {
 
   const onEmojiClick = (event, emojiObject) => {
     setChosenEmoji(emojiObject)
-    console.log(emojiObject)
-    window.emo = emojiObject
     setMsg((m) => (m + emojiObject.emoji))
   }
 

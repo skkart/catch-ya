@@ -1,9 +1,40 @@
 module.exports = {
-  "extends": "react-app",
+  "extends": [
+    "react-app",
+    "airbnb"
+  ],
   "rules" : {
-    "indent": ["error", 4], // A custom style-related rule for example
-    "semi": ["error", "never"]
+    "indent": ["error", 2, { "ArrayExpression": 1, "MemberExpression": 1 }],
+    "semi": ["error", "never"],
+    "react/destructuring-assignment": 0,
+    "react/jsx-filename-extension": 0,
+    "consistent-return": 0,
+    "space-before-function-paren": 0,
+    "react/jsx-indent": 0,
+    "react/prefer-stateless-function": 0,
+    "import/prefer-default-export": 0,
+    "no-restricted-globals": 0,
+    "max-len": 0,
+    "no-param-reassign": 0,
+    "react/prop-types": 0,
+    "react/no-unused-state": 0,
+    "react/jsx-indent-props": 0,
+    "jsx-a11y/label-has-associated-control": 0,
+    "jsx-a11y/label-has-for": 0,
+    "arrow-parens": 0,
+    "react/sort-comp": 0,
+    "operator-linebreak": 0,
+    "comma-dangle": 0,
+    "eol-last": 0,
+    "no-underscore-dangle": 0,
+    "no-unused-vars": ["error", { "args": "none" }],
+    "global-require": 0,
+    "quotes": ["error", "single"],
+    "no-unused-expressions": 0,
+    "no-throw-literal": 0,
+    // "jsx-quotes": ["error", "prefer-double"],
+    "no-trailing-spaces": 0,
+    "no-plusplus": 0,
+    "react-hooks/exhaustive-deps": 0
   }
 }
-//https://blog.bitsrc.io/build-a-login-auth-app-with-the-mern-stack-part-3-react-components-88190f8db718
-// https://www.cluemediator.com/login-app-create-login-form-in-reactjs-using-secure-rest-api

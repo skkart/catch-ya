@@ -3,7 +3,6 @@ import {
 } from '../actions/types'
 
 export default function (state = {}, action) {
-  console.log('action', action, state)
   switch (action.type) {
   case LOGIN_SUCCESS:
   case SUCCESS:

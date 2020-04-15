@@ -21,7 +21,6 @@ async function login(email, password) {
 
   // store user details and jwt token in local storage to keep user logged in between page refreshes
   resp.data.token && setAuthToken(resp.data.token)
-  console.log('login', resp.data.user)
   return resp.data.user
 }
 

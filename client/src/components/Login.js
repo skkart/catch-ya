@@ -23,7 +23,6 @@ class Login extends Component {
   }
 
   componentDidUpdate(props) {
-    console.log('update', this.props.auth)
     if (this.props.auth && this.props.auth.email) {
       this.props.history.push('/dashboard') // push user to dashboard when they login
     }
@@ -81,7 +80,6 @@ class Login extends Component {
     } catch (err) {
       console.log('Failed to login', err)
     } finally {
-      console.log('false it')
       this.setState({
         submitted: false
       })
@@ -90,7 +88,6 @@ class Login extends Component {
 
   render() {
     const { errors } = this.state
-    console.log('this.props.auth', this.props.auth, this.state)
     return (
       <div className="auth-inner">
         <form className={this.state.submitted ? 'disabled-state' : ''} noValidate onSubmit={this.onSubmit}>

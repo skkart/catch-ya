@@ -60,8 +60,10 @@ function AddChatsModel(props) {
   }
 
   useEffect(() => {
-    fetchAllConnections()
-    console.log('Chat list refreshCount')
+    if (props.refreshCount > 0) {
+      fetchAllConnections()
+      console.log('Chat list fetchAllConnections')
+    }
   }, [props.refreshCount])
 
   useEffect(() => {

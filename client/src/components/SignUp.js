@@ -132,7 +132,6 @@ function SignUp(props) {
 
       // Submit the user first and avatar if exists
       const added = await axios.post('/users', signForm)
-      console.log('added user', added)
 
       // Upload Avatar
       if (avatarFile) {
