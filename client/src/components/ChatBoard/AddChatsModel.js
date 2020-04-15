@@ -83,7 +83,6 @@ function AddChatsModel(props) {
         }
       })
     }
-    console.log('use', searchText)
     setContactList(ctList)
     setGroupList(gpList)
   }, [allList, searchText])
@@ -115,12 +114,6 @@ function AddChatsModel(props) {
                     setSearchText(text)
                   }}
                 />
-                {/* <label htmlFor="inputFind" className="sr-only"> */}
-                {/* <FontAwesomeIcon icon={faSearch} aria-hidden="true" /> */}
-                {/* Search People/Groups */}
-                {/* </label> */}
-                {/* <FontAwesomeIcon icon={faSearch} aria-hidden="true" /> */}
-                {/* <input type="text" className="form-control" name="inputFind" placeholder="Search People/Groups" onKeyUp={e => debounceSearch(e.target.value)} /> */}
               </div>
               <div className="form-group mx-sm-3 mb-2 contacts">
                 {
