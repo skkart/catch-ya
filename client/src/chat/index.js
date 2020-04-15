@@ -63,10 +63,18 @@ export const registerRoomData = (cb) => {
   if (!socket) {
     return
   }
-  socket.on('roomData', (roomData) => {
-    cb(roomData)
-  })
+  socket.on('roomData', cb)
 }
+
+export const unregisterRoomData = (cb) => {
+  if (!socket) {
+    return
+  }
+
+  socket.off('roomData', cb)
+  socket.removeListener('roomData', cb)
+}
+
 
 export const emitKeepAlive = (errorCb) => {
   if (!socket) {

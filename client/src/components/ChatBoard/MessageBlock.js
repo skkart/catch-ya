@@ -12,6 +12,7 @@ import {
   disJoinGroup,
   sendMessage,
   unregisterMessage,
+  unregisterRoomData
 } from '../../chat'
 import useOutsideClicker from './OutsideClicker'
 
@@ -42,29 +43,9 @@ function MessageBlock(props) {
     document.getElementById('scrollMsgBlock').scrollIntoView({ behavior: 'smooth', block: 'center' })
   }, 50)
 
-  // Load chats on mount
-  useEffect(() => {
-    registerRoomData((roomData) => {
-      try {
-        const rawChatLog = roomData.chatLogs
-        const jsonStr = `[${rawChatLog.slice(0, -1)}]`
-        const jsonChatArr = JSON.parse(jsonStr)
-        setChatList(jsonChatArr)
-      } catch (e) {
-        console.log('Chat log parsing issue', e)
-      } finally {
-        scrollToBottom()
-      }
-    })
-
-    // Return unmount
-    return () => {
-      setChatList([])
-    }
-  }, [])
-
   // On Room update
   useEffect(() => {
+    console.log('Room Update', room)
     // Join the group and register to socket events
     const messageReceiver = (othersMsg) => {
       if (othersMsg.room === room) {
@@ -73,6 +54,22 @@ function MessageBlock(props) {
         scrollToBottom()
       }
     }
+
+    const roomDataReceiver = (roomData) => {
+      try {
+        if (roomData && roomData.room === room) {
+          const rawChatLog = roomData.chatLogs
+          const jsonStr = `[${rawChatLog.slice(0, -1)}]`
+          const jsonChatArr = JSON.parse(jsonStr)
+          setChatList(jsonChatArr)
+          scrollToBottom()
+        }
+      } catch (e) {
+        console.log('Chat log parsing issue', e)
+      }
+    }
+
+    registerRoomData(roomDataReceiver)
     registerMessage(messageReceiver)
     joinGroup({
       userId,
@@ -86,6 +83,7 @@ function MessageBlock(props) {
     return () => {
       setChatList([])
       unregisterMessage(messageReceiver)
+      unregisterRoomData(roomDataReceiver)
       disJoinGroup({
         userId,
         room
