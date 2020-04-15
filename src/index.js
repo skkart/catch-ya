@@ -4,6 +4,7 @@ const path = require('path')
 const http = require('http')
 const socketio = require('socket.io')
 const fs = require('fs')
+const keys = require('../config/keys')
 
 require('./db/mongoose')
 
@@ -24,12 +25,12 @@ const server = http.createServer(app)
 const io = socketio(server)
 const { generateMessage, generateLocationMessage } = require('./utils/messages')
 const {
-  addUser, removeUser, getUser, getUsersInRoom,
+  addUser, removeUser, getUser, getUsersInRoom, getAllUsers
 } = require('./utils/users')
 
 const chatDirectoryPath = path.join(__dirname, '../chatlogs')
 
-const chatLogger = {}
+let chatLogger = {}
 const openWriterStream = (writerId) => {
   const chatPath = path.join(chatDirectoryPath, writerId)
   chatLogger[writerId] = fs.createWriteStream(chatPath, {
@@ -39,10 +40,10 @@ const openWriterStream = (writerId) => {
 }
 
 io.on('connection', (socket) => {
-  console.log('New WebSocket connection id', socket.id)
+  console.log('Connect WebSocket id:', socket.id)
 
   socket.on('join', (options, callback) => {
-    console.log('Join', options.userId)
+    console.log(`New Join Request user: ${options.userId} , room: ${options.room}`)
     const { error, user } = addUser({ id: options.userId, ...options })
 
     if (error || !user) {
@@ -66,6 +67,7 @@ io.on('connection', (socket) => {
         console.log('File Read err', err)
         dt = ''
       }
+      console.log(`Emit RoomData user: ${user.id} , room: ${user.room}`)
       io.to(user.room).emit('roomData', {
         room: user.room,
         users: getUsersInRoom(user.room),
@@ -84,13 +86,13 @@ io.on('connection', (socket) => {
   socket.on('sendMessage', ({
     userId, message, room, username
   }, callback) => {
-    console.log('sendMessage', userId)
+    console.log(`Send Message user: ${userId} , room: ${room}`)
     io.to(room).emit('message', generateMessage(username, message, room, chatLogger[room]))
     callback()
   })
 
   socket.on('sendLocation', (coords, callback) => {
-    console.log('sendLocation', coords.userId)
+    console.log('Send Location :', coords.userId)
     const user = getUser(coords.userId)
     if (!user) {
       console.log('User Not found')
@@ -107,6 +109,7 @@ io.on('connection', (socket) => {
       console.log('User Not found')
       return callback && callback('User not found')
     }
+    console.log('Removed User From Cache : ', user.id)
 
     // Close the chatLogger only if all the users are disJoined
     const allUserInSameRoom = getUsersInRoom(user.room)
@@ -119,19 +122,46 @@ io.on('connection', (socket) => {
   }
 
   socket.on('disJoin', (options, callback) => {
-    console.log('disJoin', options.userId)
+    console.log('Disjoin User: ', options.userId)
     removeChatUser(options.userId, callback)
   })
 
 
   socket.on('disconnectChat', (userId) => {
-    console.log('disconnectChat', userId)
+    console.log('DisconnectChat for User: ', userId)
     removeChatUser(userId)
   })
 
   socket.on('disconnect', () => {
-    console.log('disconnect', socket.id)
+    console.log('Disconnect WebSocket id:', socket.id)
   })
+})
+
+
+// Router for ChatLogger and Online Users
+app.get('/chatLogger/:key', (req, res) => {
+  if (req.params.key === keys.authSecretKey) {
+    res.send(chatLogger)
+    return
+  }
+  res.status(404).send()
+})
+
+app.delete('/chatLogger/:key', (req, res) => {
+  if (req.params.key === keys.authSecretKey) {
+    chatLogger = {}
+    res.send('done')
+    return
+  }
+  res.status(404).send()
+})
+
+app.get('/online/users/:key', (req, res) => {
+  if (req.params.key === keys.authSecretKey) {
+    res.send(getAllUsers())
+    return
+  }
+  res.status(404).send()
 })
 
 server.listen(port, () => {
