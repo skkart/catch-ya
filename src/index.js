@@ -117,13 +117,13 @@ io.on('connection', (socket) => {
   })
 
   socket.on('sendMessage', ({
-    userId, message, room, username
+    userId, message, room, username, hasSameNames
   }, callback) => {
     if (!isActive) {
       broadcastOnline()
     }
-    console.log(`Send Message user: ${userId} , room: ${room}`)
-    io.to(room).emit('message', generateMessage(username, message, room, chatLoggerDb[room]))
+    console.log(`Send Message user: ${userId} , room: ${room}, ${hasSameNames}`)
+    io.to(room).emit('message', generateMessage(username, message, room, userId, hasSameNames, chatLoggerDb[room]))
     socket.broadcast.emit('notify', {
       userId, room
     })
@@ -139,6 +139,13 @@ io.on('connection', (socket) => {
     }
     io.to(user.room).emit('locationMessage', generateLocationMessage(user.username, `https://google.com/maps?q=${coords.latitude},${coords.longitude}`))
     callback()
+  })
+
+
+  socket.on('newChatAdded', (chatInfo) => {
+    console.log('newChatAdded', chatInfo)
+    // Broadcast to all user, to notify the user is loggedin
+    socket.broadcast.emit('newConnection', chatInfo)
   })
 
   const removeChatUser = async (userId, callback) => {
