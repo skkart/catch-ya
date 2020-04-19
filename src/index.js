@@ -6,7 +6,7 @@ const socketio = require('socket.io')
 const fs = require('fs')
 const keys = require('../config/keys')
 
-const isProd = (process.env.NODE_ENV !== 'production')
+const isProd = (process.env.NODE_ENV === 'production')
 
 require('./db/mongoose')
 
@@ -14,22 +14,17 @@ const app = express()
 
 const port = process.env.PORT || 5000
 
-app.use(express.json())
-require('./routers/auth')(app)
-require('./routers/user')(app)
-require('./routers/chatGroups')(app)
 
 const publicDirectoryPath = isProd ? path.join(__dirname, '../client/build') : path.join(__dirname, '../public')
 
-// Express will serve up production assets and static folder (UI)
+// Express will serve up assets , static folder and index.html (UI)
 app.use(express.static(publicDirectoryPath))
 
-if (isProd) {
-// Express will serve index.html for rest of unknown routes
-  app.get('*', (req, res) => {
-    res.sendFile(path.resolve(publicDirectoryPath, 'index.html'))
-  })
-}
+app.use(express.json())
+
+require('./routers/auth')(app)
+require('./routers/user')(app)
+require('./routers/chatGroups')(app)
 
 // Create the chatlog directory if not exists
 const chatDirectoryPath = path.join(__dirname, '../chatlogs')
@@ -181,6 +176,14 @@ app.get('/online/users/:key', (req, res) => {
   }
   res.status(404).send()
 })
+
+if (isProd) {
+// Express will serve index.html for rest of unknown routes
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(publicDirectoryPath, 'index.html'))
+  })
+}
+
 
 server.listen(port, () => {
   console.log(`Server is up on port ${port}!`)
