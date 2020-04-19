@@ -21,6 +21,15 @@ require('./routers/user')(app)
 require('./routers/chatGroups')(app)
 
 
+// Create the chatlog directory if not exists
+const chatDirectoryPath = path.join(__dirname, '../chatlogs')
+
+if (!fs.existsSync(chatDirectoryPath)) {
+  console.log('Chatlogs dir is not found!! Creating it.')
+  fs.mkdirSync(chatDirectoryPath)
+}
+
+
 const server = http.createServer(app)
 const io = socketio(server)
 const { generateMessage, generateLocationMessage } = require('./utils/messages')
@@ -28,7 +37,6 @@ const {
   addUser, removeUser, getUser, getUsersInRoom, getAllUsers
 } = require('./utils/users')
 
-const chatDirectoryPath = path.join(__dirname, '../chatlogs')
 
 let chatLogger = {}
 const openWriterStream = (writerId) => {

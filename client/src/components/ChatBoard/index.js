@@ -16,7 +16,7 @@ function ChatBoard(props) {
     initSocket()
 
     return () => {
-      console.log('destroy socket', props.auth._id)
+      console.log('destroy socket')
       destroySocket(props.auth._id)
     }
   }, [])
