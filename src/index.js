@@ -11,7 +11,18 @@ require('./db/mongoose')
 const app = express()
 
 const port = process.env.PORT || 5000
-const publicDirectoryPath = path.join(__dirname, '../public')
+
+let publicDirectoryPath = path.join(__dirname, '../public')
+
+// Express will serve up production assets and static folder (UI)
+if (process.env.NODE_ENV === 'production') {
+  publicDirectoryPath = path.join(__dirname, '../client/build')
+
+  // Express will serve index.html for rest of unknown routes
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(publicDirectoryPath, 'index.html'))
+  })
+}
 
 app.use(express.static(publicDirectoryPath))
 
