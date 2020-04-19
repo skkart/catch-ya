@@ -4,14 +4,12 @@ const auth = require('../middleware/auth')
 module.exports = (router) => {
   router.post('/auth/login', async (req, res) => {
     try {
-      console.log('Login')
       const user = await User.findByCredentials(req.body.email, req.body.password)
       await user.generateAuthToken() // Generate new token of every login
       const { token } = user.tokens[0]
-      console.log('token: ', token)
       res.send({ user, token })
     } catch (e) {
-      console.log(e)
+      console.error(e)
       res.status(400).send(e)
     }
   })
@@ -24,6 +22,7 @@ module.exports = (router) => {
 
       res.send()
     } catch (e) {
+      console.error(e)
       res.status(500).send()
     }
   })
@@ -34,6 +33,7 @@ module.exports = (router) => {
       await req.user.save()
       res.send()
     } catch (e) {
+      console.error(e)
       res.status(500).send()
     }
   })

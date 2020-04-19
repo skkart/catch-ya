@@ -6,12 +6,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronCircleRight } from '@fortawesome/free-solid-svg-icons'
 import axios from 'axios'
 import { store } from 'react-notifications-component'
+import Loader from 'react-loader-spinner'
 import { loginUser } from '../actions'
 import { removeAuthToken } from '../utils/auth-helper'
 
 const emailRegex = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 
 function SignUp(props) {
+  const [submitted, setSubmitted] = useState(false)
   const [signForm, setSignForm] = useState({
     name: '',
     about: '',
@@ -102,7 +104,7 @@ function SignUp(props) {
           message: 'Invalid Image Format',
           type: 'danger',
           insert: 'top',
-          container: 'center',
+          container: 'top-right',
           animationIn: ['animated', 'fadeIn', 'jackInTheBox'],
           animationOut: ['animated', 'fadeOut'],
           dismiss: {
@@ -127,6 +129,7 @@ function SignUp(props) {
 
   const onSignOnSubmit = async (e) => {
     try {
+      setSubmitted(true)
       e.preventDefault()
       removeAuthToken()
 
@@ -153,10 +156,10 @@ function SignUp(props) {
       props.history.push('/sign-in')
       store.addNotification({
         title: 'Success',
-        message: 'Please sign-in once',
+        message: 'Saved Successfully !!! Please sign-in',
         type: 'success',
         insert: 'top',
-        container: 'center',
+        container: 'top-right',
         animationIn: ['animated', 'fadeIn', 'jackInTheBox'],
         animationOut: ['animated', 'fadeOut'],
         dismiss: {
@@ -171,7 +174,7 @@ function SignUp(props) {
         message: 'Failed to SignUp',
         type: 'danger',
         insert: 'top',
-        container: 'center',
+        container: 'top-right',
         animationIn: ['animated', 'fadeIn', 'jackInTheBox'],
         animationOut: ['animated', 'fadeOut'],
         dismiss: {
@@ -179,6 +182,8 @@ function SignUp(props) {
           pauseOnHover: true
         }
       })
+    } finally {
+      setSubmitted(false)
     }
   }
 
@@ -298,7 +303,16 @@ function SignUp(props) {
         </div>
       </div>
       <div className="form-group">
-        <button type="submit" className="btn btn-primary btn-block">Submit</button>
+        {
+          submitted ? (
+            <button className="btn btn-success btn-block">
+              <Loader className="chatLoader" type="ThreeDots" height={30} width={60} />
+            </button>
+          ) : (
+            <button type="submit" className="btn btn-primary btn-block">
+              Submit
+            </button>
+          )}
       </div>
     </div>
   )
@@ -306,7 +320,7 @@ function SignUp(props) {
 
   return (
     <div className="auth-inner">
-      <form noValidate onSubmit={onSignOnSubmit}>
+      <form className={submitted ? 'disabled-state' : ''} noValidate onSubmit={onSignOnSubmit}>
         <h3>Sign Up</h3>
         {tab === 0 ? loadSubmitForm() : loadAvatar()}
       </form>

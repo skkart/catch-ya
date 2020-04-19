@@ -36,7 +36,7 @@ function AddChatsModel(props) {
         message: 'Your chat selection is added!',
         type: 'success',
         insert: 'top',
-        container: 'center',
+        container: 'top-right',
         animationIn: ['animated', 'fadeIn', 'jackInTheBox'],
         animationOut: ['animated', 'fadeOut'],
         dismiss: {
@@ -50,7 +50,7 @@ function AddChatsModel(props) {
         message: 'Failed to add your chat selection',
         type: 'danger',
         insert: 'top',
-        container: 'center',
+        container: 'top-right',
         animationIn: ['animated', 'fadeIn', 'jackInTheBox'],
         animationOut: ['animated', 'fadeOut'],
         dismiss: {

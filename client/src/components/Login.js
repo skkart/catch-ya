@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faKey } from '@fortawesome/free-solid-svg-icons'
 import { each } from 'lodash'
 import { Link } from 'react-router-dom'
+import Loader from 'react-loader-spinner'
 import * as actions from '../actions'
 
 const emailRegex = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
@@ -143,17 +144,21 @@ class Login extends Component {
           </div>
 
           {
-            [(
-              <button
-                key="submit"
-                type="submit"
-                className={this.props.auth.isLoginFailed ? 'btn btn-danger btn-block login-submit' : 'btn btn-primary btn-block login-submit'}
-              >
+            this.state.submitted ?
+              [(<button key="loading" className="btn btn-success btn-block login-submit">
+                <Loader className="chatLoader" type="ThreeDots" height={30} width={60} />
+              </button>)] :
+              [(
+                <button
+                  key="submit"
+                  type="submit"
+                  className={this.props.auth.isLoginFailed ? 'btn btn-danger btn-block login-submit' : 'btn btn-primary btn-block login-submit'}
+                >
                 Sign-In
-              </button>),
-            (this.props.auth.isLoginFailed > 0 &&
+                </button>),
+              (this.props.auth.isLoginFailed > 0 &&
                 <span key="error" className="error">Please provide a valid username and password.</span>)
-            ]
+              ]
           }
 
           <div className="form-group">

@@ -55,7 +55,7 @@ function UpdateUserModel(props) {
         message: 'Failed to update profile!!',
         type: 'danger',
         insert: 'top',
-        container: 'center',
+        container: 'top-right',
         animationIn: ['animated', 'fadeIn', 'jackInTheBox'],
         animationOut: ['animated', 'fadeOut'],
         dismiss: {
@@ -80,7 +80,7 @@ function UpdateUserModel(props) {
           message: 'Invalid Image Format',
           type: 'danger',
           insert: 'top',
-          container: 'center',
+          container: 'top-right',
           animationIn: ['animated', 'fadeIn', 'jackInTheBox'],
           animationOut: ['animated', 'fadeOut'],
           dismiss: {

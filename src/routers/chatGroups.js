@@ -31,6 +31,7 @@ module.exports = (router) => {
       await req.user.save()
       res.status(201).send(savedChatGrp)
     } catch (e) {
+      console.error(e)
       res.status(400).send(e)
     }
   })
@@ -71,6 +72,7 @@ module.exports = (router) => {
 
       res.status(201).send(req.user)
     } catch (e) {
+      console.error(e)
       res.status(400).send(e)
     }
   })
@@ -87,10 +89,8 @@ module.exports = (router) => {
       const groupLinks = chatGrp.members || []
 
       const foundUserInGroup = groupLinks.find((grp) => {
-        console.log('Each ', grp.refId, req.user._id, grp.refId.toString() === req.user._id.toString())
         return (grp.refId.toString() === req.user._id.toString())
       })
-      console.log(foundUserInGroup)
       if (foundUserInGroup) {
         const buffer = await sharp(req.file.buffer).resize({ width: 250, height: 250 }).png().toBuffer()
         chatGrp.avatar = buffer
@@ -100,11 +100,11 @@ module.exports = (router) => {
       }
       res.status(200).send()
     } catch (e) {
-      console.log(e)
+      console.error(e)
       res.status(400).send(e)
     }
   }, (error, req, res, next) => {
-    console.log(error.message)
+    console.error(error.message)
     res.status(400).send({ error: error.message })
   })
 }

@@ -55,7 +55,7 @@ function AddGroupModel(props) {
         message: 'Failed to create group',
         type: 'danger',
         insert: 'top',
-        container: 'center',
+        container: 'top-right',
         animationIn: ['animated', 'fadeIn', 'jackInTheBox'],
         animationOut: ['animated', 'fadeOut'],
         dismiss: {
@@ -82,7 +82,7 @@ function AddGroupModel(props) {
           message: 'Invalid Image Format',
           type: 'danger',
           insert: 'top',
-          container: 'center',
+          container: 'top-right',
           animationIn: ['animated', 'fadeIn', 'jackInTheBox'],
           animationOut: ['animated', 'fadeOut'],
           dismiss: {

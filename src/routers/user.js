@@ -6,7 +6,6 @@ const { upload } = require('../utils/general')
 
 module.exports = (router) => {
   router.post('/users', async (req, res) => {
-    console.log('Post user', req.body)
     const user = new User(req.body)
 
     try {
@@ -14,14 +13,12 @@ module.exports = (router) => {
       if (avatarBuffer) {
         user.avatar = avatarBuffer
       }
-      console.log('saving user')
       await user.save()
       // sendWelcomeEmail(user.email, user.name)
       const token = await user.generateAuthToken()
-      console.log('generateAuthToken user')
       res.status(201).send({ user, token })
     } catch (e) {
-      console.log('Error on user save', e)
+      console.error('Error on user save', e)
       res.status(400).send(e)
     }
   })
@@ -37,7 +34,7 @@ module.exports = (router) => {
     try {
       userList = await User.find({ _id: { $ne: req.user._id } })
     } catch (e) {
-      console.log('Error ', e)
+      console.error('Error ', e)
     }
     res.send(userList)
   })
@@ -73,7 +70,7 @@ module.exports = (router) => {
         groupList = await ChatGroup.find({})
       }
     } catch (e) {
-      console.log('Error ', e)
+      console.error('Error ', e)
     }
     return [...userList, ...groupList]
   }
@@ -135,6 +132,7 @@ module.exports = (router) => {
         throw new Error('Passed invalid options')
       }
     } catch (e) {
+      console.error(e)
       res.status(400).send(e)
     }
   })
@@ -146,7 +144,7 @@ module.exports = (router) => {
       const regex = new RegExp(namePattern, 'i')
       userList = await User.find({ $or: [{ name: regex }, { email: regex }] })
     } catch (e) {
-      console.log('Error ', e)
+      console.error('Error ', e)
     }
     res.send(userList)
   })
@@ -157,6 +155,7 @@ module.exports = (router) => {
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
 
     if (!isValidOperation) {
+      console.error('Invalid Updates!!!')
       return res.status(400).send({ error: 'Invalid updates!' })
     }
 
@@ -167,6 +166,7 @@ module.exports = (router) => {
       await req.user.save()
       res.send(req.user)
     } catch (e) {
+      console.error(e)
       res.status(400).send(e)
     }
   })
@@ -188,11 +188,11 @@ module.exports = (router) => {
       await req.user.save()
       res.send(buffer)
     } catch (e) {
-      console.log('Error on avatar upload', e)
+      console.error('Error on avatar upload', e)
       res.status(400).send({ error: e })
     }
   }, (error, req, res, next) => {
-    console.log('Error on avatar upload', error.message)
+    console.error('Error on avatar upload', error.message)
     res.status(400).send({ error: error.message })
   })
 
@@ -206,6 +206,7 @@ module.exports = (router) => {
     await userObj.save()
     res.send()
   }, (error, req, res, next) => {
+    console.error(error.message)
     res.status(400).send({ error: error.message })
   })
 
@@ -226,6 +227,7 @@ module.exports = (router) => {
       res.set('Content-Type', 'image/png')
       res.send(user.avatar)
     } catch (e) {
+      console.error(e)
       res.status(404).send()
     }
   })
@@ -241,6 +243,7 @@ module.exports = (router) => {
       res.set('Content-Type', 'image/png')
       res.send(user.avatar)
     } catch (e) {
+      console.error(e)
       res.status(404).send()
     }
   })
