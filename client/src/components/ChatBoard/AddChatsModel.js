@@ -12,6 +12,7 @@ function AddChatsModel(props) {
   const [contactList, setContactList] = useState([])
   const [groupList, setGroupList] = useState([])
   const [searchText, setSearchText] = useState('')
+  const [submitted, setSubmitted] = useState(false)
 
 
   const fetchAllConnections = async() => {
@@ -20,9 +21,10 @@ function AddChatsModel(props) {
   }
 
   const addUser = async (chatObj) => {
-    if (!chatObj) {
+    if (!chatObj || submitted) {
       return
     }
+    setSubmitted(true)
     try {
       await axios.post('/users/connections/add', {
         refId: chatObj._id,
@@ -56,6 +58,8 @@ function AddChatsModel(props) {
           pauseOnHover: true
         }
       })
+    } finally {
+      setSubmitted(false)
     }
   }
 
@@ -98,7 +102,10 @@ function AddChatsModel(props) {
       role="dialog"
       aria-hidden="true"
     >
-      <div className="modal-dialog modal-dialog-centered" role="document">
+      <div
+        className={submitted ? 'modal-dialog modal-dialog-centered disabled-state' : 'modal-dialog modal-dialog-centered'}
+        role="document"
+      >
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title">Find People/Groups</h5>
