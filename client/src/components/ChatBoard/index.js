@@ -39,7 +39,6 @@ function ChatBoard(props) {
   }
 
   useEffect(() => {
-    console.log('Init socket')
     initSocket(props.auth._id)
     registerUserOnline((usr) => {
       activeAction.current.userID = usr

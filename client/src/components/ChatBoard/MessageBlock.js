@@ -43,10 +43,8 @@ function MessageBlock(props) {
 
   // On Room update
   useEffect(() => {
-    console.log('Room Update', room)
     // Join the group and register to socket events
     const messageReceiver = (othersMsg) => {
-      console.log('Emit Receiver', othersMsg)
       if (othersMsg.room === room) {
         // update the received msg
         setChatList(chatListOld => [...chatListOld, othersMsg])
@@ -56,7 +54,6 @@ function MessageBlock(props) {
 
     const roomDataReceiver = (roomData) => {
       try {
-        console.log('Emit outside', roomData)
         if (roomData && roomData.room === room) {
           // const rawChatLog = roomData.chatLogs
           // const jsonStr = `[${rawChatLog.slice(0, -1)}]`
