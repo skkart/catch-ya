@@ -10,6 +10,7 @@ export default function Chatboard({ info }) {
         data-toggle="modal"
         data-target="#showProfileUserProfile"
         data-whatever="@mdo"
+        className={info.status}
       />
       <p className="profileName">{info.name}</p>
       <div className="social-media" />

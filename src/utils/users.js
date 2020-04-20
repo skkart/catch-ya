@@ -45,5 +45,6 @@ module.exports = {
   removeUser,
   getUser,
   getUsersInRoom,
-  getAllUsers: () => users
+  getAllUsers: () => users,
+  getAllUsersIds: () => users.map(us => us.id)
 }

@@ -1,8 +1,45 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
+import axios from 'axios'
 import { connect } from 'react-redux'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faRecycle } from '@fortawesome/free-solid-svg-icons'
 import UpdateUserModel from './UpdateUserModel'
+import { updateUserChats } from '../../actions'
 
 function Profile(props) {
+  const refreshAction = useRef(null)
+  const refreshStatus = async () => {
+    try {
+      if (props.chat.list && props.chat.list.length) {
+        const activeUsers = await axios.get('/users/online')
+        props.chat.list.forEach(user => {
+          if (user.isGroup) {
+            return
+          }
+          if (activeUsers.data.indexOf(user._id) > -1) {
+            user.status = 'online'
+          } else {
+            user.status = 'offline'
+          }
+        })
+        props.updateUserChats(props.chat.list)
+      }
+    } catch (e) {
+      console.log('Error', e)
+    }
+  }
+
+  useEffect(() => {
+    let statusInterval = setInterval(() => {
+      refreshAction.current.click()
+    }, 1000 * 60 * 2) // Get all profile status every 2min
+
+    return () => {
+      clearInterval(statusInterval)
+      statusInterval = null
+    }
+  }, [])
+
   return (
     <div className="profile">
       <div className="wrap">
@@ -35,6 +72,9 @@ function Profile(props) {
             </li>
           </ul>
         </div>
+        <label ref={refreshAction} className="float-right notVisible" onClick={refreshStatus}>
+          <FontAwesomeIcon icon={faRecycle} aria-hidden="true" />
+        </label>
       </div>
       <UpdateUserModel />
     </div>
@@ -42,10 +82,11 @@ function Profile(props) {
 }
 
 const mapStateToProps = state => ({
-  auth: state.auth
+  auth: state.auth,
+  chat: state.chat
 })
 
 export default connect(
   mapStateToProps,
-  null
+  { updateUserChats }
 )(Profile)

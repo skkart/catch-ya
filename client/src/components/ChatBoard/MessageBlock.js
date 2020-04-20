@@ -46,6 +46,7 @@ function MessageBlock(props) {
     console.log('Room Update', room)
     // Join the group and register to socket events
     const messageReceiver = (othersMsg) => {
+      console.log('Emit Receiver', othersMsg)
       if (othersMsg.room === room) {
         // update the received msg
         setChatList(chatListOld => [...chatListOld, othersMsg])
@@ -55,11 +56,12 @@ function MessageBlock(props) {
 
     const roomDataReceiver = (roomData) => {
       try {
+        console.log('Emit outside', roomData)
         if (roomData && roomData.room === room) {
-          const rawChatLog = roomData.chatLogs
-          const jsonStr = `[${rawChatLog.slice(0, -1)}]`
-          const jsonChatArr = JSON.parse(jsonStr)
-          setChatList(jsonChatArr)
+          // const rawChatLog = roomData.chatLogs
+          // const jsonStr = `[${rawChatLog.slice(0, -1)}]`
+          // const jsonChatArr = JSON.parse(jsonStr)
+          setChatList(roomData.chatLogs)
           scrollToBottom()
         }
       } catch (e) {
@@ -201,7 +203,7 @@ function MessageBlock(props) {
         <ul>
           {showChat && renderChatBlocks()}
         </ul>
-        <span id="scrollMsgBlock">scroll block</span>
+        <span id="scrollMsgBlock" className="notVisible">scroll block</span>
       </div>
       <div ref={inputMsgRef} className="message-input">
         <div className={showEmoji ? 'emoji-box' : 'hide'}>

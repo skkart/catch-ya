@@ -6,6 +6,8 @@ const socketio = require('socket.io')
 const fs = require('fs')
 const keys = require('../config/keys')
 
+const {getChatLogger} = require('./utils/general')
+
 const isProd = (process.env.NODE_ENV === 'production')
 
 require('./db/mongoose')
@@ -43,19 +45,12 @@ const {
 } = require('./utils/users')
 
 
-let chatLogger = {}
-const openWriterStream = (writerId) => {
-  const chatPath = path.join(chatDirectoryPath, writerId)
-  chatLogger[writerId] = fs.createWriteStream(chatPath, {
-    flags: 'a+' // 'a' means appending (old data will be preserved)
-  })
-  return chatLogger[writerId]
-}
+let chatLoggerDb = {}
 
 io.on('connection', (socket) => {
   console.log('Connect WebSocket id:', socket.id)
 
-  socket.on('join', (options, callback) => {
+  socket.on('join', async (options, callback) => {
     console.log(`New Join Request user: ${options.userId} , room: ${options.room}`)
     const { error, user } = addUser({ id: options.userId, ...options })
 
@@ -66,30 +61,34 @@ io.on('connection', (socket) => {
 
     // Tell the current socket to join specific room
     socket.join(user.room)
-    const chatPath = path.join(chatDirectoryPath, user.room)
-    openWriterStream(user.room)
 
+    if (!chatLoggerDb[user.room]) {
+      chatLoggerDb[user.room] = await getChatLogger(user.room)
+    }
+
+    console.log(`Emit RoomData user: ${user.id} , room: ${user.room}`)
+    io.to(user.room).emit('roomData', {
+      room: user.room,
+      users: getUsersInRoom(user.room),
+      chatLogs: chatLoggerDb[user.room] ? chatLoggerDb[user.room].logs : []
+    })
+    // This callback will inform UI that all is well
+    callback()
     // This emit will send only to its connection
     // socket.emit('message', generateMessage('Admin', 'Welcome!'))
     // This broadcast.to will send all scokets belong to that room apart current connection
     // socket.broadcast.to(user.room).emit('message', generateMessage('Admin', `${user.username} has joined!`))
     // This io.to will send all scokets belong to that room + current connection
+  })
 
-    fs.readFile(chatPath, 'utf8', (err, dt) => {
-      if (err) {
-        console.log('File Read err', err)
-        dt = ''
-      }
-      console.log(`Emit RoomData user: ${user.id} , room: ${user.room}`)
-      io.to(user.room).emit('roomData', {
-        room: user.room,
-        users: getUsersInRoom(user.room),
-        chatLogs: dt
-      })
+  socket.on('active', (userId) => {
+    console.log('online', userId)
+    socket.broadcast.emit('online', userId)
+  })
 
-      // This callback will inform UI that all is well
-      callback()
-    })
+  socket.on('unactive', (userId) => {
+    console.log('offline', userId)
+    socket.broadcast.emit('offline', userId)
   })
 
   socket.on('keepAlive', (callback) => {
@@ -100,7 +99,7 @@ io.on('connection', (socket) => {
     userId, message, room, username
   }, callback) => {
     console.log(`Send Message user: ${userId} , room: ${room}`)
-    io.to(room).emit('message', generateMessage(username, message, room, chatLogger[room]))
+    io.to(room).emit('message', generateMessage(username, message, room, chatLoggerDb[room]))
     callback()
   })
 
@@ -115,7 +114,7 @@ io.on('connection', (socket) => {
     callback()
   })
 
-  const removeChatUser = (userId, callback) => {
+  const removeChatUser = async (userId, callback) => {
     const user = removeUser(userId)
 
     if (!user) {
@@ -128,10 +127,13 @@ io.on('connection', (socket) => {
     const allUserInSameRoom = getUsersInRoom(user.room)
     if (allUserInSameRoom.length === 0) {
       console.log('Close ChatLogger for room: ', user.room)
-      chatLogger[user.room].end()
-      chatLogger[user.room].close()
-      chatLogger[user.room] = null
+      // flush all the stored chatlogs to mongodb
+      if (chatLoggerDb[user.room]) {
+        await chatLoggerDb[user.room].save()
+        chatLoggerDb[user.room] = null
+      }
     }
+    callback && callback()
   }
 
   socket.on('disJoin', (options, callback) => {
@@ -154,7 +156,7 @@ io.on('connection', (socket) => {
 // Router for ChatLogger and Online Users
 app.get('/chatLogger/:key', (req, res) => {
   if (req.params.key === keys.authSecretKey) {
-    res.send(chatLogger)
+    res.send(chatLoggerDb)
     return
   }
   res.status(404).send()
@@ -162,7 +164,7 @@ app.get('/chatLogger/:key', (req, res) => {
 
 app.delete('/chatLogger/:key', (req, res) => {
   if (req.params.key === keys.authSecretKey) {
-    chatLogger = {}
+    chatLoggerDb = {}
     res.send('done')
     return
   }

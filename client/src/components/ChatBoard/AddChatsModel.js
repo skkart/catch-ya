@@ -139,7 +139,7 @@ function AddChatsModel(props) {
                       }}
                     >
                       <div className="wrap">
-                        {/* <span className="contact-status online" /> */}
+                        {contact.status && <span className={`contact-status ${contact.status}`} />}
                         <img src={`data:image/png;base64,${contact.avatar}`} alt="" />
                         <div className="meta">
                           <p className="name">{contact.name}</p>

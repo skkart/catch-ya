@@ -8,7 +8,7 @@ export const loadUserChats = () => async (dispatch, getState) => {
     const { auth } = getState()
     const resp = await axios('/users/connections')
     const newChats = resp.data.map(({
-      name, about, avatar, _id, email
+      name, about, avatar, _id, email, status
     }) => {
       const isGroup = !email
       return {
@@ -16,11 +16,20 @@ export const loadUserChats = () => async (dispatch, getState) => {
         name,
         about,
         _id,
+        status,
         isGroup,
         room: isGroup ? _id : getGroupName(_id, auth._id)
       } 
     })
     dispatch({ type: CHAT_LIST_SUCCESS, payload: newChats })
+  } catch (e) {
+    dispatch({ type: CHAT_LIST_ERROR, payload: [] })
+  }
+}
+
+export const updateUserChats = (newChatList) => (dispatch, getState) => {
+  try {
+    dispatch({ type: CHAT_LIST_SUCCESS, payload: newChatList })
   } catch (e) {
     dispatch({ type: CHAT_LIST_ERROR, payload: [] })
   }

@@ -106,7 +106,6 @@
     width: 50px;
     border-radius: 50%;
     padding: 3px;
-    border: 2px solid #e74c3c;
     height: 50px;
     float: left;
     cursor: pointer;
@@ -124,20 +123,20 @@
     }
 }
 
-.chat-board .sidepanel .profile .wrap img.online {
+.chat-board img.online {
     border: 3px solid #2ecc71;
 }
 
-.chat-board .sidepanel .profile .wrap img.away {
+.chat-board img.away {
     border: 3px solid #f1c40f;
 }
 
-.chat-board .sidepanel .profile .wrap img.busy {
+.chat-board img.busy {
     border: 3px solid #e74c3c;
 }
 
-.chat-board .sidepanel .profile .wrap img.offline {
-    border: 3px solid #95a5a6;
+.chat-board img.offline {
+    border: 3px solid #f1c40f;
 }
 
 .chat-board .sidepanel .profile .wrap p {
@@ -306,11 +305,11 @@
 }
 
 .chat-board .sidepanel .profile .wrap .status-options ul li#status-offline span.status-circle {
-    background: #95a5a6;
+    background: #f1c40f;
 }
 
 .chat-board .sidepanel .profile .wrap .status-options ul li#status-offline.active span.status-circle:before {
-    border: 1px solid #95a5a6;
+    border: 1px solid #f1c40f;
 }
 
 .chat-board .sidepanel .profile .wrap .expanded {
@@ -479,10 +478,6 @@
     border-right: 7px solid #2ecc71;
 }
 
-.chat-board .sidepanel .contacts ul li.contact.active span.contact-status {
-    border: 3px solid var(--main-chat-color) !important;
-}
-
 .contacts ul li.contact .wrap {
     width: 88%;
     margin: 0 auto;
@@ -497,17 +492,20 @@
 
 .contacts ul li.contact .wrap span {
     position: absolute;
-    left: 0;
+    left: 2px;
     margin: -2px 0 0 -2px;
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
     border: 2px solid var(--main-chat-sidebar-color);
-    background: #95a5a6;
 }
 
 .contacts ul li.contact .wrap span.online {
     background: #2ecc71;
+}
+
+.contacts ul li.contact .wrap span.offline {
+    background: #f1c40f;
 }
 
 .contacts ul li.contact .wrap span.away {
@@ -524,6 +522,7 @@
     float: left;
     cursor: pointer;
     margin-right: 10px;
+    margin-left: 3px;
 }
 
 @media screen and (max-width: 835px) {
@@ -708,7 +707,7 @@ div {
     overflow-x: hidden;
 }
 
-.chat-board .content .messageblock #scrollMsgBlock {
+.chat-board .notVisible {
     visibility: hidden;
 }
 

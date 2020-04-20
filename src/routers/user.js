@@ -3,12 +3,16 @@ const User = require('../models/user')
 const ChatGroup = require('../models/chatgroup')
 const auth = require('../middleware/auth')
 const { upload } = require('../utils/general')
+const { getAllUsersIds } = require('../utils/users')
 
 module.exports = (router) => {
   router.post('/users', async (req, res) => {
     const user = new User(req.body)
 
     try {
+      if (!user.about) {
+        user.about = 'Catch Me anytime !!!'
+      }
       const avatarBuffer = await user.generateAvatar()
       if (avatarBuffer) {
         user.avatar = avatarBuffer
@@ -39,6 +43,17 @@ module.exports = (router) => {
     res.send(userList)
   })
 
+  router.get('/users/online', auth, async (req, res) => {
+    const allActiveUsersGlobal = getAllUsersIds()
+    const allActiveFrds = []
+    req.user && req.user.chatlinks.forEach((link) => {
+      if (link.refType === 'user' && allActiveUsersGlobal.indexOf(link.refId.toString()) > -1) {
+        allActiveFrds.push(link.refId)
+      }
+    })
+    res.send(allActiveFrds)
+  })
+
   const getUserConnectionsByCondtion = async (req, mongoCondition) => {
     let userList = []
     let groupList = []
@@ -61,6 +76,26 @@ module.exports = (router) => {
 
       if (userIds.length) {
         userList = await User.find({ _id: { [mongoCondition]: userIds } })
+        const allActiveUsers = getAllUsersIds()
+        userList = userList.map(({
+          avatar, name, about, _id, email, gender 
+        }) => {
+          let status = ''
+          if (allActiveUsers.indexOf(_id.toString()) > -1) {
+            status = 'online'
+          } else {
+            status = 'offline'
+          }
+          return {
+            name,
+            about,
+            _id,
+            email,
+            gender,
+            avatar: Buffer.from(avatar).toString('base64'),
+            status
+          }
+        })
       }
 
       if (chatGroupIds.length) {

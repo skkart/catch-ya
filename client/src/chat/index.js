@@ -2,10 +2,24 @@ import io from 'socket.io-client'
 
 let socket = null
 
-export const initSocket = () => {
+export const initSocket = (userId) => {
   socket = io({ forceNew: true })
+  socket.emit('active', userId)
 }
 
+export const registerUserOnline = (cb) => {
+  if (!socket) {
+    return
+  }
+  socket.on('online', cb)
+}
+
+export const registerUserOffline = (cb) => {
+  if (!socket) {
+    return
+  }
+  socket.on('offline', cb)
+}
 
 export const joinGroup = (groupDetails, cb) => {
   if (!socket) {
@@ -87,6 +101,7 @@ export const destroySocket = (userId) => {
   if (!socket) {
     return
   }
+  socket.emit('unactive', userId)
   socket.emit('disconnectChat', userId)
   socket.disconnect()
   socket = null
