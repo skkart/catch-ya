@@ -1,4 +1,3 @@
-
 const users = {}
 
 const addUser = ({ id, username, room, socketId }) => {
@@ -30,34 +29,22 @@ const addUser = ({ id, username, room, socketId }) => {
 }
 
 const removeUser = (id) => {
-  if (users[id]) {
-    users[id].id = null
-    users[id].username = null
-    users[id].room = null
+  const user = users[id]
+
+  if (!user) {
     delete users[id]
-    return true
-  }
-  return false
-}
-
-const getUser = (id) => users[id]
-
-const getUserBySocketId = (socketId) => {
-  for (const usr of Object.keys(users)) {
-    if (users[usr].socketId === socketId) {
-      return users[usr]
-    }
+    return user
   }
 }
+
+const getUser = (id) => users.find((user) => user.id.toString() === id.toString())
+
+const getUserBySocketId = (socketId) => users.find((user) => user.socketId === socketId)
+
 
 const getUsersInRoom = (room) => {
-  const sameRoomUsers = []
-  for (const usr of Object.keys(users)) {
-    if (users[usr].room === room) {
-      sameRoomUsers.push(users[usr])
-    }
-  }
-  return sameRoomUsers
+  room = room.trim().toLowerCase()
+  return users.filter((user) => user.room === room)
 }
 
 module.exports = {
@@ -67,4 +54,9 @@ module.exports = {
   getUserBySocketId,
   getUsersInRoom,
   getAllUsers: () => users,
+  getActiveUsersIds: () => {
+    const activeUsrId = []
+    users.forEach(usr => usr.isActive && (activeUsrId.push(usr.id)))
+    return activeUsrId
+  }
 }

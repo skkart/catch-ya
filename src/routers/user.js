@@ -3,7 +3,7 @@ const User = require('../models/user')
 const ChatGroup = require('../models/chatgroup')
 const auth = require('../middleware/auth')
 const { upload } = require('../utils/general')
-const { getAllUsersIds } = require('../utils/users')
+const { getAllUsers } = require('../utils/users')
 
 module.exports = (router) => {
   router.post('/users', async (req, res) => {
@@ -43,12 +43,21 @@ module.exports = (router) => {
     res.send(userList)
   })
 
-  router.get('/users/online', auth, async (req, res) => {
-    const allActiveUsersGlobal = getAllUsersIds()
+  router.get('/users/status/all', auth, async (req, res) => {
+    const allUsersGlobal = getAllUsers()
     const allActiveFrds = []
     req.user && req.user.chatlinks.forEach((link) => {
-      if (link.refType === 'user' && allActiveUsersGlobal.indexOf(link.refId.toString()) > -1) {
-        allActiveFrds.push(link.refId)
+      if (link.refType === 'user') {
+        const id = link.refId.toString()
+        const user = allUsersGlobal[id]
+        let status = 'offline'
+        if (user) {
+          status = user.isActive ? 'online' : 'away'
+        }
+        allActiveFrds.push({
+          id,
+          status
+        })
       }
     })
     res.send(allActiveFrds)
@@ -76,13 +85,14 @@ module.exports = (router) => {
 
       if (userIds.length) {
         userList = await User.find({ _id: { [mongoCondition]: userIds } })
-        const allActiveUsers = getAllUsersIds()
+        const allUsersGlobal = getAllUsers()
         userList = userList.map(({
           avatar, name, about, _id, email, gender 
         }) => {
           let status = ''
-          if (allActiveUsers.indexOf(_id.toString()) > -1) {
-            status = 'online'
+          const user = allUsersGlobal[_id.toString()]
+          if (user) {
+            status = user.isActive ? 'online' : 'away'
           } else {
             status = 'offline'
           }

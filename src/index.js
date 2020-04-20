@@ -6,7 +6,7 @@ const socketio = require('socket.io')
 const fs = require('fs')
 const keys = require('../config/keys')
 
-const {getChatLogger} = require('./utils/general')
+const { getChatLogger } = require('./utils/general')
 
 const isProd = (process.env.NODE_ENV === 'production')
 
@@ -41,7 +41,7 @@ const server = http.createServer(app)
 const io = socketio(server)
 const { generateMessage, generateLocationMessage } = require('./utils/messages')
 const {
-  addUser, removeUser, getUser, getUsersInRoom, getAllUsers
+  addUser, removeUser, getUser, getUsersInRoom, getAllUsers, getUserBySocketId
 } = require('./utils/users')
 
 
@@ -50,15 +50,47 @@ let chatLoggerDb = {}
 io.on('connection', (socket) => {
   console.log('Connect WebSocket id:', socket.id)
 
+  let isActive = false
+
+  const broadcastOnline = () => {
+    if (!isActive) {
+      console.log('Connect online:', socket.handshake.query.userId)
+      // Broadcast to all user, to notify the user is loggedin
+      socket.broadcast.emit('online', socket.handshake.query.userId)
+      const usr = getUser(socket.handshake.query.userId)
+      usr && (usr.isActive = true)
+    }
+    isActive = true
+  }
+
+  const broadcastOffline = () => {
+    if (isActive) {
+      const usr = getUser(socket.handshake.query.userId)
+      if (usr) {
+        usr.isActive = false
+        console.log('Disconnect away:', socket.handshake.query.userId)
+        socket.broadcast.emit('away', socket.handshake.query.userId)
+      } else {
+        // Broadcast to all user, to notify the user is loggedout
+        console.log('Disconnect offline:', socket.handshake.query.userId)
+        socket.broadcast.emit('offline', socket.handshake.query.userId)
+      }
+    }
+    isActive = false
+  }
+
+  // Connect to room
   socket.on('join', async (options, callback) => {
+    broadcastOnline()
     console.log(`New Join Request user: ${options.userId} , room: ${options.room}`)
-    const { error, user } = addUser({ id: options.userId, ...options })
+    const { error, user } = addUser({ id: options.userId, ...options, socketId: socket.id })
 
     if (error || !user) {
       console.log('Error', (error || 'user not found'))
       return callback(error || 'user not found')
     }
 
+    user.isActive = true
     // Tell the current socket to join specific room
     socket.join(user.room)
 
@@ -69,7 +101,6 @@ io.on('connection', (socket) => {
     console.log(`Emit RoomData user: ${user.id} , room: ${user.room}`)
     io.to(user.room).emit('roomData', {
       room: user.room,
-      users: getUsersInRoom(user.room),
       chatLogs: chatLoggerDb[user.room] ? chatLoggerDb[user.room].logs : []
     })
     // This callback will inform UI that all is well
@@ -81,16 +112,6 @@ io.on('connection', (socket) => {
     // This io.to will send all scokets belong to that room + current connection
   })
 
-  socket.on('active', (userId) => {
-    console.log('online', userId)
-    socket.broadcast.emit('online', userId)
-  })
-
-  socket.on('unactive', (userId) => {
-    console.log('offline', userId)
-    socket.broadcast.emit('offline', userId)
-  })
-
   socket.on('keepAlive', (callback) => {
     console.log('keepAlive', socket.id)
   })
@@ -98,6 +119,9 @@ io.on('connection', (socket) => {
   socket.on('sendMessage', ({
     userId, message, room, username
   }, callback) => {
+    if (!isActive) {
+      broadcastOnline()
+    }
     console.log(`Send Message user: ${userId} , room: ${room}`)
     io.to(room).emit('message', generateMessage(username, message, room, chatLoggerDb[room]))
     callback()
@@ -115,7 +139,7 @@ io.on('connection', (socket) => {
   })
 
   const removeChatUser = async (userId, callback) => {
-    const user = removeUser(userId)
+    const user = getUser(userId)
 
     if (!user) {
       console.log('User Not found')
@@ -133,6 +157,7 @@ io.on('connection', (socket) => {
         chatLoggerDb[user.room] = null
       }
     }
+    removeUser(user.id)
     callback && callback()
   }
 
@@ -147,7 +172,18 @@ io.on('connection', (socket) => {
     removeChatUser(userId)
   })
 
-  socket.on('disconnect', () => {
+  socket.on('disconnect', async () => {
+    broadcastOffline()
+    const disconnectUser = getUserBySocketId(socket.id)
+    // These are the user who are disconnected from mob due to inactive time
+    if (disconnectUser) {
+      console.log('Ungrasefully disconnect user: ', disconnectUser.id)
+      disconnectUser.socketId = null
+      // flush all the stored chatlogs to mongodb
+      if (chatLoggerDb[disconnectUser.room]) {
+        await chatLoggerDb[disconnectUser.room].save()
+      }
+    }
     console.log('Disconnect WebSocket id:', socket.id)
   })
 })
