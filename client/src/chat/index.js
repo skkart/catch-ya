@@ -3,8 +3,14 @@ import io from 'socket.io-client'
 let socket = null
 
 export const initSocket = (userId) => {
-  socket = io({ forceNew: true })
-  socket.emit('active', userId)
+  socket = io({
+    // reconnectionDelay: 1000 * 60 * 5, // 5min once try to reconnect for disconnected socket
+    reconnectionDelayMax: 1000 * 60 * 30,
+    query: {
+      userId
+    } 
+  })
+  // socket.emit('active', userId)
 }
 
 export const registerUserOnline = (cb) => {
@@ -19,6 +25,14 @@ export const registerUserOffline = (cb) => {
     return
   }
   socket.on('offline', cb)
+}
+
+
+export const registerUserAway = (cb) => {
+  if (!socket) {
+    return
+  }
+  socket.on('away', cb)
 }
 
 export const joinGroup = (groupDetails, cb) => {
@@ -101,7 +115,7 @@ export const destroySocket = (userId) => {
   if (!socket) {
     return
   }
-  socket.emit('unactive', userId)
+  // socket.emit('unactive', userId)
   socket.emit('disconnectChat', userId)
   socket.disconnect()
   socket = null

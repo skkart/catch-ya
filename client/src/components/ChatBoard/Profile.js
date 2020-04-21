@@ -32,7 +32,7 @@ function Profile(props) {
   useEffect(() => {
     let statusInterval = setInterval(() => {
       refreshAction.current.click()
-    }, 1000 * 60 * 2) // Get all profile status every 2min
+    }, 1000 * 60 * 5) // Get all profile status every 5min
 
     return () => {
       clearInterval(statusInterval)

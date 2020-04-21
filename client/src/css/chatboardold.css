@@ -478,19 +478,19 @@
     border-right: 7px solid #2ecc71;
 }
 
-.chat-board .wrap {
+.contacts ul li.contact .wrap {
     width: 88%;
     margin: 0 auto;
     position: relative;
 }
 
 @media screen and (max-width: 835px) {
-    .chat-board .wrap {
+    .chat-board .sidepanel .contacts ul li.contact .wrap {
         width: 100%;
     }
 }
 
-.chat-board span.contact-status {
+.contacts ul li.contact .wrap span {
     position: absolute;
     left: 2px;
     margin: -2px 0 0 -2px;
@@ -500,23 +500,23 @@
     border: 2px solid var(--main-chat-sidebar-color);
 }
 
-.chat-board span.contact-status.online {
+.contacts ul li.contact .wrap span.online {
     background: #2ecc71;
 }
 
-.chat-board span.contact-status.offline {
+.contacts ul li.contact .wrap span.offline {
     background: #f7f7f7;
 }
 
-.chat-board  span.contact-status.away {
+.contacts ul li.contact .wrap span.away {
     background: #f1c40f;
 }
 
-.chat-board span.contact-status.busy {
+.contacts ul li.contact .wrap span.busy {
     background: #e74c3c;
 }
 
-.chat-board .wrap img {
+.contacts ul li.contact .wrap img {
     width: 40px;
     border-radius: 50%;
     float: left;
@@ -526,7 +526,7 @@
 }
 
 @media screen and (max-width: 835px) {
-    .chat-board .sideWrap img {
+    .chat-board .sidepanel .contacts ul li.contact .sideWrap img {
         margin-right: 0px;
     }
 }
@@ -539,7 +539,7 @@ div {
     vertical-align: baseline;
 }
 
-.chat-board .wrap .meta {
+.contacts ul li.contact .wrap .meta {
     padding: 5px 0 0 0;
     margin: 0;
     border: 0;
@@ -549,17 +549,16 @@ div {
 }
 
 @media screen and (max-width: 835px) {
-    .chat-board .sideWrap .meta {
+    .chat-board .sidepanel .contacts ul li.contact .sideWrap .meta {
         display: none;
     }
 }
 
-.chat-board .wrap .meta .name {
-    text-transform: capitalize;
+.contacts ul li.contact .wrap .meta .name {
     font-weight: 600;
 }
 
-.chat-board .wrap .meta .preview {
+.contacts ul li.contact .wrap .meta .preview {
     margin: 5px 0 0 0;
     padding: 0 0 1px;
     font-weight: 400;
@@ -572,7 +571,7 @@ div {
     transition: 1s all ease;
 }
 
-.chat-board .wrap .meta .preview span {
+.contacts ul li.contact .wrap .meta .preview span {
     position: initial;
     border-radius: initial;
     background: none;
@@ -679,6 +678,9 @@ div {
     margin: 9px 12px 0 9px;
 }
 
+.chat-board .content .contact-profile p {
+    float: left;
+}
 
 .chat-board .content .contact-profile .social-media {
     float: right;
@@ -939,7 +941,6 @@ div {
 }
 
 p.profileName {
-    text-transform: capitalize;
     font-weight: 700;
     font-size: 17px;
 }
@@ -1160,31 +1161,4 @@ aside.emoji-picker-react {
     .messages ul li p {
         font-size: 15px;
     }
-}
-
-.chat-board .profileGroup {
-    display:table;
-    width: 65%;
-    padding-top: 9px;
-    position: relative;
-}
-
-.chat-board .profileGroup p {
-    display: table-row;
-    line-height: normal;
-}
-
-.chat-board .status-ball {
-   margin-top: 4px !important;
-}
-
-.chat-board .status-text {
-    text-transform: capitalize;
-    font-size: 15px;
-    margin-top: 4px !important;
-    padding-left: 20px;
-}
-
-.chat-board .cursor-pointer {
-    cursor: pointer;
 }

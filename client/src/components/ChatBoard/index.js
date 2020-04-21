@@ -6,7 +6,7 @@ import SidePanel from './SidePanel'
 import ChatContent from './ChatContent'
 import WelcomeScreen from './WelcomeScreen'
 import {
-  destroySocket, initSocket, registerUserOffline, registerUserOnline
+  destroySocket, initSocket, registerUserOffline, registerUserOnline, registerUserAway
 } from '../../chat'
 import { updateUserChats } from '../../actions'
 
@@ -50,11 +50,19 @@ function ChatBoard(props) {
       activeAction.current.statusType = 'offline'
       activeAction.current.click()
     })
+    registerUserAway((usr) => {
+      activeAction.current.userID = usr
+      activeAction.current.statusType = 'away'
+      activeAction.current.click()
+    })
 
-    return () => {
-      console.log('destroy socket')
+    const destroySocketFn = () => {
       destroySocket(props.auth._id)
     }
+
+    window.addEventListener('beforeunload', destroySocketFn)
+
+    return destroySocketFn
   }, [])
 
   return (

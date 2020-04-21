@@ -61,7 +61,7 @@ function Contacts(props) {
                   onClick={() => { onContactSelect(contact) }}
                 >
                   <div className="wrap sideWrap">
-                    {contact.status && <span className={`contact-status ${contact.status}`} />}
+                    {contact.status && <span className={`contact-status ${contact.status}`} title={contact.status}/>}
                     <img src={`data:image/png;base64,${contact.avatar}`} alt="" />
                     <div className="meta">
                       <p className="name">{contact.name}</p>

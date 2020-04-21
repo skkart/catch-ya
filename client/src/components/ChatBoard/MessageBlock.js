@@ -38,7 +38,7 @@ function MessageBlock(props) {
   const { room } = props.info
 
   const scrollToBottom = () => setTimeout(() => {
-    document.getElementById('scrollMsgBlock').scrollIntoView({ behavior: 'smooth', block: 'center' })
+    document.getElementById('scrollMsgBlock').scrollIntoView({ behavior: 'smooth', block: 'end' })
   }, 50)
 
   // On Room update
@@ -55,9 +55,6 @@ function MessageBlock(props) {
     const roomDataReceiver = (roomData) => {
       try {
         if (roomData && roomData.room === room) {
-          // const rawChatLog = roomData.chatLogs
-          // const jsonStr = `[${rawChatLog.slice(0, -1)}]`
-          // const jsonChatArr = JSON.parse(jsonStr)
           setChatList(roomData.chatLogs)
           scrollToBottom()
         }
