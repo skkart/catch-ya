@@ -9,7 +9,8 @@ export default function WelcomeScreen(props) {
           className="image mb-4"
         />
         <div
-          className="form-row text-center">
+          className="form-row text-center"
+        >
           <div className="col-12">
             <p>Chat with your friends, family and groups</p>
           </div>
