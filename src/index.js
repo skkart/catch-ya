@@ -124,6 +124,9 @@ io.on('connection', (socket) => {
     }
     console.log(`Send Message user: ${userId} , room: ${room}`)
     io.to(room).emit('message', generateMessage(username, message, room, chatLoggerDb[room]))
+    socket.broadcast.emit('notify', {
+      userId, room
+    })
     callback()
   })
 

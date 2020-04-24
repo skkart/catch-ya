@@ -13,6 +13,23 @@ export const initSocket = (userId) => {
   // socket.emit('active', userId)
 }
 
+export const registerNotification = (cb) => {
+  if (!socket) {
+    return
+  }
+  socket.on('notify', cb)
+}
+
+export const unregisterNotification = (cb) => {
+  if (!socket) {
+    return
+  }
+  socket.off('notify')
+  socket.removeListener('notify', cb)
+}
+
+
+
 export const registerUserOnline = (cb) => {
   if (!socket) {
     return

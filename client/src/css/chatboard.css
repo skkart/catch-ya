@@ -463,9 +463,22 @@
     vertical-align: baseline;
 }
 
+.chat-board .mobile {
+    display: none;
+}
+
+.chat-board .mobile.badge {
+    position: absolute;
+    bottom: -45px;
+    right: 1px;
+}
+
 @media screen and (max-width: 835px) {
     .chat-board .sidepanel .sideContacts ul li.contact {
-        padding: 6px 0 46px 8px;
+        padding: 6px 0 46px 3px;
+    }
+    .chat-board .mobile {
+        display: inherit;
     }
 }
 
@@ -482,6 +495,14 @@
     width: 88%;
     margin: 0 auto;
     position: relative;
+}
+
+.chat-board .message-input .wrap {
+    width: 100%;
+}
+
+.chat-board .active .wrap {
+    width: 92%;
 }
 
 @media screen and (max-width: 835px) {
@@ -572,7 +593,7 @@ div {
     transition: 1s all ease;
 }
 
-.chat-board .wrap .meta .preview span {
+.chat-board .wrap .meta .profileGroup span {
     position: initial;
     border-radius: initial;
     background: none;
@@ -1185,6 +1206,14 @@ aside.emoji-picker-react {
     padding-left: 20px;
 }
 
+.chat-board .status-text-group {
+    text-transform: none !important;
+}
+
 .chat-board .cursor-pointer {
     cursor: pointer;
+}
+
+.chat-board .wrap span.badge {
+    border-radius: 8px;
 }

@@ -18,6 +18,7 @@ export default function Chatboard({ info }) {
         <p className="profileName">{info.name}</p>
         <p className="preview">
           <span className={`status-ball contact-status ${info.status}`} title={info.status} />
+          {info.participants && <span className="status-text status-text-group">{`${info.participants} participants`}</span>}
           <span className="status-text">{info.status}</span>
         </p>
       </div>

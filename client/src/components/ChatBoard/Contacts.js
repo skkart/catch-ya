@@ -61,11 +61,25 @@ function Contacts(props) {
                   onClick={() => { onContactSelect(contact) }}
                 >
                   <div className="wrap sideWrap">
-                    {contact.status && <span className={`contact-status ${contact.status}`} title={contact.status}/>}
+                    {contact.status && <span className={`contact-status ${contact.status}`} title={contact.status} />}
                     <img src={`data:image/png;base64,${contact.avatar}`} alt="" />
+                    <span
+                      className={contact.unreadCount ? 'badge badge-light float-right mobile' : 'hide'}
+                    >
+                      {contact.unreadCount}
+                    </span>
                     <div className="meta">
-                      <p className="name">{contact.name}</p>
-                      <p className="preview">{contact.about}</p>
+                      <p className="name">
+                        {contact.name}
+                        <span
+                          className={contact.unreadCount ? 'badge badge-light float-right' : 'hide'} >
+                          {contact.unreadCount}
+                        </span>
+                      </p>
+                      <p className="preview">
+                        {`${contact.about}`}
+                        &nbsp;
+                      </p>
                     </div>
                   </div>
                 </li>

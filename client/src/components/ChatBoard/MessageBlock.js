@@ -1,37 +1,20 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import moment from 'moment'
-import Picker, { SKIN_TONE_NEUTRAL } from 'emoji-picker-react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPaperPlane, faSmileBeam } from '@fortawesome/free-solid-svg-icons'
 import Message from './Message'
 import {
   joinGroup,
   registerMessage,
   registerRoomData,
   disJoinGroup,
-  sendMessage,
   unregisterMessage,
   unregisterRoomData
 } from '../../chat'
-import useOutsideClicker from './OutsideClicker'
+import MessageInput from './MessageInput'
 
 function MessageBlock(props) {
   const [chatList, setChatList] = useState([])
   const [showChat, setShowChat] = useState(false)
-  const [msg, setMsg] = useState('')
-  const [showEmoji, setShowEmoji] = useState(false)
-  const [chosenEmoji, setChosenEmoji] = useState(null)
-  const inputMsgRef = useRef(null)
-  useOutsideClicker(inputMsgRef, () => {
-    setShowEmoji(false)
-  })
-
-  const onEmojiClick = (event, emojiObject) => {
-    setChosenEmoji(emojiObject)
-    setMsg((m) => (m + emojiObject.emoji))
-  }
-
 
   const username = props.auth.name.toLowerCase()
   const userId = props.auth._id
@@ -88,42 +71,9 @@ function MessageBlock(props) {
   }, [room])
 
 
-  // onSend Method
-  const onMyMessageSend = (text) => {
-    if (!text) {
-      return
-    }
-    sendMessage({
-      userId,
-      room,
-      username,
-      message: text
-    }, () => {
-      setChatList([...chatList, {
-        username,
-        createdAt: new Date().getTime(),
-        text
-      }])
-      setMsg('')
-      setShowEmoji(false)
-      scrollToBottom()
-    })
-  }
-
-
-  const sendMsg = () => {
-    onMyMessageSend(msg)
-  }
-
-  const onKeyPress = (e) => {
-    const code = (e.keyCode ? e.keyCode : e.which)
-    if (code === 13) {
-      sendMsg()
-    }
-  }
-
-  const onChange = (e) => {
-    setMsg(e.target.value)
+  const onMessageSubmit = (msgObj) => {
+    setChatList([...chatList, msgObj])
+    scrollToBottom()
   }
 
   const renderChatBlocks = () => {
@@ -164,8 +114,9 @@ function MessageBlock(props) {
       }
 
       // Show time for every days
-      if (current.createdAt > (startDayTime + oneDayinMs)) {
-        startDayTime += oneDayinMs
+      const crrTime = currentMoment.unix() * 1000
+      if (crrTime > (startDayTime + oneDayinMs)) {
+        startDayTime = currentMoment.startOf('day').unix() * 1000
         blockMessages.push(
           <Message
             key={`time${i}`}
@@ -199,26 +150,7 @@ function MessageBlock(props) {
         </ul>
         <span id="scrollMsgBlock" className="notVisible">scroll block</span>
       </div>
-      <div ref={inputMsgRef} className="message-input">
-        <div className={showEmoji ? 'emoji-box' : 'hide'}>
-          <Picker onEmojiClick={onEmojiClick} skinTone={SKIN_TONE_NEUTRAL} />
-        </div>
-        <div className="wrap">
-          <textarea
-            type="text"
-            placeholder="Write your message..."
-            value={msg}
-            onChange={onChange}
-            onKeyPress={onKeyPress}
-          />
-          <div className="wrapSmily" onClick={() => setShowEmoji((r) => !r)}>
-            <FontAwesomeIcon icon={faSmileBeam} className="attachment" />
-          </div>
-          <button className="submit" onClick={sendMsg}>
-            <FontAwesomeIcon icon={faPaperPlane} />
-          </button>
-        </div>
-      </div>
+      <MessageInput info={props.info} onMessageSubmit={onMessageSubmit} />
     </div>
   )
 }
