@@ -150,13 +150,16 @@ io.on('connection', (socket) => {
     }
     console.log('Removed User From Cache : ', user.id)
 
+    // Save the state in db if any user is removed
+    if (chatLoggerDb[user.room]) {
+      await chatLoggerDb[user.room].save()
+    }
     // Close the chatLogger only if all the users are disJoined
     const allUserInSameRoom = getUsersInRoom(user.room)
     if (allUserInSameRoom.length === 0) {
       console.log('Close ChatLogger for room: ', user.room)
       // flush all the stored chatlogs to mongodb
       if (chatLoggerDb[user.room]) {
-        await chatLoggerDb[user.room].save()
         chatLoggerDb[user.room] = null
       }
     }

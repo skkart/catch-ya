@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { connect } from 'react-redux'
 import '../../css/reset.min.css'
 import '../../css/chatboard.css'
-import { debounce } from 'lodash'
+import { throttle } from 'lodash'
 import SidePanel from './SidePanel'
 import ChatContent from './ChatContent'
 import WelcomeScreen from './WelcomeScreen'
@@ -20,7 +20,7 @@ function ChatBoard(props) {
   const soundAction = useRef(null)
   const [playing, play] = useAudio()
 
-  const playSound = debounce(() => {
+  const playSound = throttle(() => {
     const chatList = props.chat.list
     const currentChatUser = props.chat.current
     if (chatList && chatList.length) {
