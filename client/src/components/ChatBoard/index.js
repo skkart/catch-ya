@@ -7,9 +7,15 @@ import SidePanel from './SidePanel'
 import ChatContent from './ChatContent'
 import WelcomeScreen from './WelcomeScreen'
 import {
-  destroySocket, initSocket, registerUserOffline, registerUserOnline, registerUserAway, registerNotification
+  destroySocket,
+  initSocket,
+  registerUserOffline,
+  registerUserOnline,
+  registerUserAway,
+  registerNotification,
+  registerNewUserConnections
 } from '../../chat'
-import { updateUserChats, setCurrentChatProfile } from '../../actions'
+import { updateUserChats, setCurrentChatProfile, loadUserChats } from '../../actions'
 import useAudio from './ChatAudio'
 
 
@@ -18,6 +24,7 @@ function ChatBoard(props) {
   // Use ref to update user active status and props.chatlist
   const activeAction = useRef(null)
   const soundAction = useRef(null)
+  const newUserAction = useRef(null)
   const [playing, play] = useAudio()
 
   const playSound = throttle(() => {
@@ -82,6 +89,14 @@ function ChatBoard(props) {
     }
   }
 
+  const updateOnNewUser = () => {
+    const { userID } = newUserAction.current
+    if (userID && userID === props.auth._id) {
+      props.loadUserChats()
+    }
+    newUserAction.current.userID = null
+  }
+
   useEffect(() => {
     initSocket(props.auth._id)
     registerNotification(({ room }) => {
@@ -102,6 +117,11 @@ function ChatBoard(props) {
       activeAction.current.userID = usr
       activeAction.current.statusType = 'away'
       activeAction.current.click()
+    })
+
+    registerNewUserConnections((newConnInfo) => {
+      newUserAction.current.userID = newConnInfo.addId
+      newUserAction.current.click()
     })
 
     const destroySocketFn = () => {
@@ -127,6 +147,7 @@ function ChatBoard(props) {
       }
       <label ref={activeAction} className="float-right notVisible" onClick={updateUserStatus}>active</label>
       <button ref={soundAction} className="float-right notVisible" onClick={playSound}>Play</button>
+      <label ref={newUserAction} className="float-right notVisible" onClick={updateOnNewUser}>NewUser</label>
     </div>
   )
 }
@@ -138,5 +159,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { updateUserChats, setCurrentChatProfile }
+  { updateUserChats, setCurrentChatProfile, loadUserChats }
 )(ChatBoard)

@@ -30,6 +30,7 @@ function MessageBlock(props) {
     const messageReceiver = (othersMsg) => {
       if (othersMsg.room === room) {
         // update the received msg
+        console.log(othersMsg)
         setChatList(chatListOld => [...chatListOld, othersMsg])
         scrollToBottom()
       }
@@ -38,6 +39,8 @@ function MessageBlock(props) {
     const roomDataReceiver = (roomData) => {
       try {
         if (roomData && roomData.room === room) {
+          window.chatLogs = roomData.chatLogs
+          console.log(roomData.chatLogs)
           setChatList(roomData.chatLogs)
           scrollToBottom()
         }
@@ -99,12 +102,22 @@ function MessageBlock(props) {
     while (i < messageCount) {
       const previous = chatList[i - 1]
       const current = chatList[i]
-      const isMine = current.username === username
+      let isMine = current.username === username
+
+      if (current.userId) {
+        isMine = current.userId === userId
+      }
+
       const currentMoment = moment(current.createdAt)
       let showTimestamp = true
       if (previous) {
         // If its the same user -- Dont so time for next 5mins
-        if (previous.username === current.username) {
+        let isSameUserMsgs = previous.username === current.username
+        if (current.userId) {
+          isSameUserMsgs = previous.userId === current.userId
+        }
+
+        if (isSameUserMsgs) {
           const previousMoment = moment(previous.createdAt)
           const previousMinutes = currentMoment.diff(previousMoment, 'minutes')
           if (previousMinutes < 5) {

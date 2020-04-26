@@ -17,6 +17,7 @@ function MessageInput(props) {
   const username = props.auth.name.toLowerCase()
   const userId = props.auth._id
   const { room } = props.info
+  const receiverName = !props.info.isGroup && props.info.name.toLowerCase()
 
   useOutsideClicker(inputMsgRef, () => {
     setShowEmoji(false)
@@ -32,12 +33,16 @@ function MessageInput(props) {
     if (!text) {
       return
     }
-    sendMessage({
+    const msgObj = {
       userId,
       room,
       username,
-      message: text
-    }, () => {
+      message: text,
+    }
+    if (receiverName === username) {
+      msgObj.hasSameNames = true
+    }
+    sendMessage(msgObj, () => {
       setMsg('')
       setShowEmoji(false)
       props.onMessageSubmit({

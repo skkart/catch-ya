@@ -120,6 +120,28 @@ export const unregisterRoomData = (cb) => {
   socket.removeListener('roomData', cb)
 }
 
+export const emitNewChats = (info) => {
+  if (!socket) {
+    return
+  }
+  socket.emit('newChatAdded', info)
+}
+
+export const registerNewUserConnections = (cb) => {
+  if (!socket) {
+    return
+  }
+  socket.on('newConnection', cb)
+}
+
+export const unregisterNewUserConnections = (cb) => {
+  if (!socket) {
+    return
+  }
+
+  socket.off('newConnection', cb)
+  socket.removeListener('newConnection', cb)
+}
 
 export const emitKeepAlive = (errorCb) => {
   if (!socket) {
