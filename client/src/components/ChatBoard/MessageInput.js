@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPaperPlane, faSearch, faSmileBeam } from '@fortawesome/free-solid-svg-icons'
-import { debounce } from 'lodash'
+import { faPaperPlane, faSmileBeam } from '@fortawesome/free-solid-svg-icons'
 import connect from 'react-redux/es/connect/connect'
 import Picker, { SKIN_TONE_NEUTRAL } from 'emoji-picker-react'
 import useOutsideClicker from './OutsideClicker'
@@ -10,7 +9,6 @@ import { sendMessage } from '../../chat'
 function MessageInput(props) {
   const [msg, setMsg] = useState('')
   const [showEmoji, setShowEmoji] = useState(false)
-  const [chosenEmoji, setChosenEmoji] = useState(null)
   const inputMsgRef = useRef(null)
 
 
@@ -24,7 +22,6 @@ function MessageInput(props) {
   })
 
   const onEmojiClick = (event, emojiObject) => {
-    setChosenEmoji(emojiObject)
     setMsg((m) => (m + emojiObject.emoji))
   }
 
