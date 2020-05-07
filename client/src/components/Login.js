@@ -95,7 +95,7 @@ class Login extends Component {
           <div
             className="image loginImage mb-4"
           />
-          <h3>Welcome to Catch-Ya!!!</h3>
+          <h3>Login</h3>
           <div className="form-group">
             <div className="input-group">
               <div className="input-group-append">

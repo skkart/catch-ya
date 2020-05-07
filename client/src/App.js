@@ -21,6 +21,7 @@ import Login from './components/Login'
 import SignUp from './components/SignUp'
 import PrivateRoute from './private-route/PrivateRoute'
 import Chatboard from './components/ChatBoard'
+import AuthWelcomeScreen from './components/ChatBoard/AuthWelcomeScreen'
 
 class App extends Component {
   onLogoutClick = e => {
@@ -45,7 +46,7 @@ class App extends Component {
           <ReactNotification />
           <div className="auth-wrapper">
             <Switch>
-              <Route exact path="/" component={Login} />
+              <Route exact path="/" component={AuthWelcomeScreen} />
               <Route path="/sign-in" component={Login} />
               <Route path="/sign-up" component={SignUp} />
               <Switch>
