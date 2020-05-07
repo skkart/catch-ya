@@ -8,7 +8,7 @@ function WelcomeScreen(props) {
   const onLogoutClick = async e => {
     e.preventDefault()
     await props.logoutUser()
-    window.href = '/sign-in'
+    window.location.replace('/sign-in')
   }
 
 

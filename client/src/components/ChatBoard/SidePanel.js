@@ -17,7 +17,8 @@ function SidePanel(props) {
   const onLogoutClick = async e => {
     e.preventDefault()
     await props.logoutUser()
-    window.href = '/sign-in'
+    console.log('Href sign')
+    window.location.replace('/sign-in')
   }
 
   return (
