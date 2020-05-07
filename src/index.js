@@ -143,7 +143,6 @@ io.on('connection', (socket) => {
 
 
   socket.on('newChatAdded', (chatInfo) => {
-    console.log('newChatAdded', chatInfo)
     // Broadcast to all user, to notify the user is loggedin
     socket.broadcast.emit('newConnection', chatInfo)
   })

@@ -12,7 +12,6 @@ const generateMessage = (username, text, room, userId, hasSameNames, chatLoggerD
     chatLoggerDb.logs.push(dt)
   }
   dt.room = room
-  console.log('generateMessage', dt)
   return dt
 }
 
