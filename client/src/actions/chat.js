@@ -1,7 +1,7 @@
 import axios from 'axios'
+import { uniq } from 'lodash'
 import { CHAT_LIST_ERROR, CHAT_LIST_SUCCESS, CURRENT_CHAT } from './types'
 import { getGroupName } from '../utils/auth-helper'
-import {uniq} from 'lodash'
 
 
 export const loadUserChats = () => async (dispatch, getState) => {

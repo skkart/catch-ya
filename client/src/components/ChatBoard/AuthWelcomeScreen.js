@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
+import Loader from 'react-loader-spinner'
 
 function AuthWelcomeScreen(props) {
   useEffect(() => {
@@ -9,6 +10,28 @@ function AuthWelcomeScreen(props) {
   }, [props.auth])
 
   const isLoggedIn = props.auth && props.auth.email
+  const isAuth = props.auth && props.auth.isAuth
+  // Show loader
+  if (typeof isAuth !== 'boolean') {
+    return (
+      <div className="welcomeScreen row h-100">
+        <div className="col-sm-12 my-auto mb-4">
+          <h3 className="h3 mb-3 font-weight-normal">Welcome to Catch-Ya!!!</h3>
+          <div
+            className="image mb-4"
+          />
+          <div
+            className="form-row text-center"
+          >
+            <div className="col-12">
+              <p>Chat with your friends, family and groups</p>
+            </div>
+          </div>
+          <Loader className="chatLoaderMain" type="ThreeDots" height={125} width={250} />
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="welcomeScreen row h-100">
