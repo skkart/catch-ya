@@ -4,4 +4,4 @@ A fully functional and scalable platform build to chat with your friends, family
 Link to Website: https://catch-ya.herokuapp.com
 
 ## User Flow
-![Chat Flow](./chat_flow.jpeg)
+![Chat Flow](./docs/chat_flow.png)
