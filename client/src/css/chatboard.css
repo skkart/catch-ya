@@ -407,7 +407,7 @@
     color: var(--main-profile-color);
 }
 
-.chat-board .sidepanel .contacts {
+.chat-board .contacts {
     height: calc(100% - 225px);
     overflow-y: auto;
     overflow-x: hidden;
@@ -416,27 +416,27 @@
 }
 
 @media screen and (max-width: 835px) {
-    .chat-board .sidepanel .contacts {
+    .chat-board .contacts {
         height: calc(100% - 190px);
         overflow-y: auto;
         overflow-x: hidden;
     }
 
-    .chat-board .sidepanel .contacts::-webkit-scrollbar {
+    .chat-board .contacts::-webkit-scrollbar {
         display: none;
     }
 }
 
-.chat-board .sidepanel .contacts.expanded {
+.chat-board .contacts.expanded {
     height: calc(100% - 334px);
 }
 
-.chat-board .sidepanel .contacts::-webkit-scrollbar {
+.chat-board .contacts::-webkit-scrollbar {
     width: 5px;
     background: var(--main-chat-sidebar-color);
 }
 
-.chat-board .sidepanel .contacts::-webkit-scrollbar-thumb {
+.chat-board .contacts::-webkit-scrollbar-thumb {
     background-color: var(--main-profile-color);
     scrollbar-color: var(--main-profile-color);
     scrollbar-width: 5px;
@@ -482,11 +482,11 @@
     }
 }
 
-.chat-board .sidepanel .contacts ul li.contact:hover {
+.chat-board .contacts ul li.contact:hover {
     background: var(--main-chat-color);
 }
 
-.chat-board .sidepanel .contacts ul li.contact.active {
+.chat-board .contacts ul li.contact.active {
     background: var(--main-chat-sidebar-color-active);
     border-right: 7px solid #2ecc71;
 }
@@ -566,6 +566,7 @@ div {
     border: 0;
     font-size: 100%;
     font: inherit;
+    line-height: initial;
     vertical-align: baseline;
 }
 

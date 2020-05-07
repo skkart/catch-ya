@@ -1,13 +1,20 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import ShowProfileUserModel from './ShowProfileUserModel'
 
 export default function Chatboard({ info }) {
+  const [refreshCount, setRefreshCount] = useState(0)
+
+  useEffect(() => {
+    setRefreshCount(0)
+  }, [info])
+
   return (
     <div
       className="contact-profile cursor-pointer"
       data-toggle="modal"
       data-target="#showProfileUserProfile"
       data-whatever="@mdo"
+      onClick={() => setRefreshCount(ct => ct + 1)}
     >
       <img
         src={`data:image/png;base64,${info.avatar}`}
@@ -23,7 +30,7 @@ export default function Chatboard({ info }) {
         </p>
       </div>
       <div className="social-media" />
-      <ShowProfileUserModel profile={info} />
+      <ShowProfileUserModel profile={info} refreshCount={refreshCount}/>
     </div>
   )
 }

@@ -2,6 +2,9 @@ const sharp = require('sharp')
 const ChatGroup = require('../models/chatgroup')
 const auth = require('../middleware/auth')
 const { upload } = require('../utils/general')
+const { getAllUsers } = require('../utils/users')
+
+const User = require('../models/user')
 
 module.exports = (router) => {
   router.post('/chatGroups', auth, async (req, res) => {
@@ -88,9 +91,7 @@ module.exports = (router) => {
       // Check if current group has current user
       const groupLinks = chatGrp.members || []
 
-      const foundUserInGroup = groupLinks.find((grp) => {
-        return (grp.refId.toString() === req.user._id.toString())
-      })
+      const foundUserInGroup = groupLinks.find((grp) => (grp.refId.toString() === req.user._id.toString()))
       if (foundUserInGroup) {
         const buffer = await sharp(req.file.buffer).resize({ width: 250, height: 250 }).png().toBuffer()
         chatGrp.avatar = buffer
@@ -106,5 +107,58 @@ module.exports = (router) => {
   }, (error, req, res, next) => {
     console.error(error.message)
     res.status(400).send({ error: error.message })
+  })
+
+
+  const getAllParticipantsOfGroup = async (userIds) => {
+    let userList = []
+    try {
+      console.log('userList', userIds)
+      if (userIds.length) {
+        userList = await User.find({ _id: { $in: userIds } })
+        const allUsersGlobal = getAllUsers()
+        userList = userList.map(({
+          avatar, name, about, _id, email, gender
+        }) => {
+          let status = ''
+          const user = allUsersGlobal[_id.toString()]
+          if (user) {
+            status = user.isActive ? 'online' : 'away'
+          } else {
+            status = 'offline'
+          }
+          return {
+            name,
+            about,
+            _id,
+            email,
+            gender,
+            avatar: Buffer.from(avatar).toString('base64'),
+            status
+          }
+        })
+      }
+    } catch (e) {
+      console.error('Error ', e)
+    }
+    return userList
+  }
+
+  router.get('/chatGroups/:id/participants', auth, async (req, res) => {
+    let list = []
+    try {
+      const chatGrp = await ChatGroup.findById(req.params.id)
+      if (!chatGrp) {
+        throw new Error('Invalid Group')
+      }
+
+      // Check if current group has current user
+      const groupLinks = chatGrp.members || []
+      list = await getAllParticipantsOfGroup(groupLinks.map(grp => grp.refId))
+    } catch (e) {
+      console.error(e)
+      res.status(400).send(e)
+    }
+    res.send(list)
   })
 }

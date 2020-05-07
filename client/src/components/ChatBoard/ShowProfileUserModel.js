@@ -1,6 +1,35 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
+import Loader from 'react-loader-spinner'
 
 export default function ShowProfileUserModel(props) {
+  const [loading, setLoading] = useState(false)
+  const [contactList, setContactList] = useState([])
+
+
+  const fetchAllGroupParticipants = async() => {
+    try {
+      if (props.profile.isGroup) {
+        setLoading(true)
+        const res = await axios.get(`/chatGroups/${props.profile._id}/participants`)
+        setContactList(res.data)
+      } else {
+        setContactList([])
+      }
+    } catch (e) {
+      console.log('Error on fetchAllGroupParticipants', e)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    if (props.refreshCount <= 1) {
+      fetchAllGroupParticipants()
+      console.log('Chat list fetchAllGroupParticipants')
+    }
+  }, [props.refreshCount])
+
   return (
     <div
       className="modal fade"
@@ -57,6 +86,34 @@ export default function ShowProfileUserModel(props) {
                 </div>
               </div>
             </form>
+            {
+              loading ? <Loader className="chatLoaderMain" type="ThreeDots" height={50} width={80} />
+                : (
+                  <div className="form-group mx-sm-3 mb-2 contacts">
+                    {
+                      contactList.length > 0 &&
+                <span className="list-suggestion">People</span>
+                    }
+                    <ul className="list-group">
+                      {contactList.map(contact => (
+                        <li
+                          className="list-group-item list-group-item-action list-group-item-light contact"
+                          key={contact._id}
+                        >
+                          <div className="wrap">
+                            {contact.status && <span className={`contact-status ${contact.status}`} />}
+                            <img src={`data:image/png;base64,${contact.avatar}`} alt="" />
+                            <div className="meta">
+                              <p className="name">{contact.name}</p>
+                              <p className="preview">{contact.about}</p>
+                            </div>
+                          </div>
+                        </li>
+                      ))
+                      }
+                    </ul>
+                  </div>
+                )}
           </div>
         </div>
       </div>

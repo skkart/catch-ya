@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { CHAT_LIST_ERROR, CHAT_LIST_SUCCESS, CURRENT_CHAT } from './types'
 import { getGroupName } from '../utils/auth-helper'
+import {uniq} from 'lodash'
 
 
 export const loadUserChats = () => async (dispatch, getState) => {
@@ -12,7 +13,7 @@ export const loadUserChats = () => async (dispatch, getState) => {
       name, about, avatar, _id, email, status, members
     }) => {
       const isGroup = !email
-      return {
+      const chatObj = {
         avatar,
         name,
         about,
@@ -22,7 +23,13 @@ export const loadUserChats = () => async (dispatch, getState) => {
         isGroup,
         participants: members && members.length,
         room: isGroup ? _id : getGroupName(_id, auth._id)
-      } 
+      }
+      if (members && members.length) {
+        const participantsArr = uniq(members.map(grp => grp.refId))
+        chatObj.participants = participantsArr.length
+      }
+
+      return chatObj
     })
     dispatch({ type: CHAT_LIST_SUCCESS, payload: newChats })
   } catch (e) {
