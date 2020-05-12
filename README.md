@@ -1,5 +1,6 @@
 # [catch-ya](https://catch-ya.herokuapp.com)
-A fully functional and scalable platform build to chat with your friends, family and groups
+A messenger to chat with friends, family and groups.<br/>
+This platform has all major functionalities and is scalable for further add-ons
 
 Link to Website: https://catch-ya.herokuapp.com
 
